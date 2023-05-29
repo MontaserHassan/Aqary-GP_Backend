@@ -10,7 +10,7 @@ const app = express();
 const { MONGO_URL } = process.env;
 const PORT = process.env.PORT || 4000;
 
-/// to use cors to connect between front and back
+app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
 app.use(routes);
@@ -20,7 +20,7 @@ mongoClient.connect(MONGO_URL)
     .catch(error => console.log('Error connecting to database', error));
 
 app.get('/', (req, res) => {
-  console.log('connected');
+  // console.log('connected');
   res.json({ project: 'Real State' });
 });
 
