@@ -17,19 +17,17 @@ router.post('/webhook', (req, res) => {
     switch (event_type) {
       case 'PAYMENT.CAPTURE.COMPLETED':
         console.log('Payment captured:', resource);
-        res.json(resource);
+        return res.json(resource);
         break;
       case 'CHECKOUT.ORDER.COMPLETED':
         console.log('Order completed:', resource);
-        res.json(resource);
+        return res.json(resource);
         break;
   
       default:
         console.log('Unknown event type:', event_type);
-        res.json(event_type);
+        return res.json(event_type);
     }
-  
-    res.sendStatus(200);
   });
 
 // guest routes
