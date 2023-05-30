@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 require('dotenv').config();
-const rateLimit = require('express-rate-limit')
+const rateLimit = require('express-rate-limit');
+const RoleModel = require('./models/RoleModel.js');
 
 const app = express();
 
@@ -22,7 +23,6 @@ const limiter = rateLimit({
 
 // Apply the rate limiting middleware to all requests
 app.use(limiter)
-
 
 // previent extended fields and set limit
 app.use(express.urlencoded({ extended: false, limit: "1kb" }));
