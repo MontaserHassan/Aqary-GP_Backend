@@ -10,6 +10,11 @@ const router = express.Router();
 router.get('/', (req, res) => {
     res.sendStatus(200);
 })
+router.get('/checkout', (req, res) => {
+    console.log(req.params)
+    console.log(req.body)
+    console.log(req.query)
+})
 
 // guest routes
 
