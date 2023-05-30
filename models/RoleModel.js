@@ -1,4 +1,4 @@
-const mongoose = require('../config/database');
+const mongoose = require("mongoose");
 
 const actionSchema = new mongoose.Schema({
     canBlockUser: { type: Boolean, default: false },
@@ -12,7 +12,7 @@ const roleSchema = new mongoose.Schema({
         type: String,
         required: true,
         maxLength: 128,
-        minLength: 2
+        minLength: 2,
     },
     actions: actionSchema,
 });
