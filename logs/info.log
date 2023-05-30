@@ -72,3 +72,8 @@ info: app listening on port http://localhost:4000 {"timestamp":"2023-05-30T08:59
 info: Connected to database {"timestamp":"2023-05-30T08:59:31.580Z"}
 info: app listening on port http://localhost:4000 {"timestamp":"2023-05-30T09:00:05.071Z"}
 info: Connected to database {"timestamp":"2023-05-30T09:00:06.971Z"}
+info: app listening on port http://localhost:4000 {"timestamp":"2023-05-30T09:00:18.000Z"}
+info: Connected to database {"timestamp":"2023-05-30T09:00:19.837Z"}
+info: app listening on port http://localhost:4000 {"timestamp":"2023-05-30T09:02:39.637Z"}
+info: app listening on port http://localhost:4000 {"timestamp":"2023-05-30T09:02:42.597Z"}
+info: Connected to database {"timestamp":"2023-05-30T09:02:44.674Z"}
