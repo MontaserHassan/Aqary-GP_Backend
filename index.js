@@ -17,8 +17,8 @@ app.use(cors());
 app.use(limiter)
 
 // previent extended fields and set limit
-app.use(express.urlencoded({ extended: false, limit: "1kb" }));
-app.use(express.json({ extended: false, limit: "1kb" }));
+app.use(express.urlencoded({ extended: false, limit: "1mb" }));
+app.use(express.json({ extended: false, limit: "1mb" }));
 
 // header security
 app.use(helmet());
