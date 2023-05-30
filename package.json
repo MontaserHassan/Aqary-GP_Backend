@@ -2,7 +2,7 @@
   "name": "homezone",
   "version": "1.0.0",
   "description": "real state website to sale and rent apartment",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1"
