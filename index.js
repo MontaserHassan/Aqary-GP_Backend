@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 require('dotenv').config();
-const rateLimit = require('express-rate-limit');
-const RoleModel = require('./models/RoleModel.js');
 const { limiter } = require('./config/security.js');
 require('./config/database.js');
 
