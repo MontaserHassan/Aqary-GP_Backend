@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 
 
 
-app.post('/webhook', (req, res) => {
+router.post('/webhook', (req, res) => {
     const { event_type, resource } = req.body;
   
     switch (event_type) {
