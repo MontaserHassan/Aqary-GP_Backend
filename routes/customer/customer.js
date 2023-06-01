@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 
 router.post('/webhook', (req, res) => {
     const { event_type, resource } = req.body;
-  
+    console.log(req.body)
     switch (event_type) {
       case 'PAYMENT.CAPTURE.COMPLETED':
         console.log('Payment captured:', resource);
