@@ -1,12 +1,16 @@
 const express = require('express');
 const paypalHook = require('../../controllers/paypalHook');
-const haveRole = require('../../middlewares/haveRole');
+const havePermission = require('../../middlewares/havePermission');
+const roleName = require('../../middlewares/roleName');
 
 const router = express.Router();
 
 // all customer routes
 // for everyone
-router.get('/', haveRole('admin'), (req, res) => res.json({
+// router.get('/', havePermission('blockUser'), (req, res) => res.json({
+//   message: 'hello world!',
+// }));
+router.get('/', roleName('admin'), (req, res) => res.json({
   message: 'hello world!',
 }));
 
