@@ -1,16 +1,14 @@
 const express = require('express');
-const crypto = require('crypto');
 const paypalHook = require('../../controllers/paypalHook');
+const haveRole = require('../../middlewares/haveRole');
+
 const router = express.Router();
-const webhookSecret = process.env.WEBHOOK_SECRET;
 
-// all customer routes 
-// for everyone 
-router.get('/', (req, res) => {
-    res.sendStatus(200);
-})
-
-console.log(paypalHook)
+// all customer routes
+// for everyone
+router.get('/', haveRole('admin'), (req, res) => res.json({
+  message: 'hello world!',
+}));
 
 router.post('/checkout/webhook', paypalHook);
 
@@ -18,10 +16,6 @@ router.post('/checkout/webhook', paypalHook);
 
 // authenticated routes
 
-
-
 // middleware for check is admin or not
-
-
 
 module.exports = router;
