@@ -6,7 +6,7 @@ const client = new paypal.core.PayPalHttpClient(environment);
 
 const paypalHook = async (req, res) => {
         const event = req.body;
-      
+        console.log(req.body);
         if (event.event_type === 'PAYMENT.ORDER.CREATED') {
           const orderId = event.resource.id;
           console.log(`Payment order created: ${orderId}`);
@@ -32,4 +32,4 @@ const paypalHook = async (req, res) => {
         }
 }
 
-export default paypalHook;
+module.exports = paypalHook;
