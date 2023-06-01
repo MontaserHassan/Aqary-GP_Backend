@@ -1,5 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
+const { default: paypalHook } = require('../../controllers/paypalHook');
 const router = express.Router();
 const webhookSecret = process.env.WEBHOOK_SECRET;
 
@@ -11,24 +12,7 @@ router.get('/', (req, res) => {
 
 
 
-router.post('/webhook', (req, res) => {
-    const { event_type, resource } = req.body;
-    console.log(req.body)
-    switch (event_type) {
-      case 'PAYMENT.CAPTURE.COMPLETED':
-        console.log('Payment captured:', resource);
-        return res.json(resource);
-        break;
-      case 'CHECKOUT.ORDER.COMPLETED':
-        console.log('Order completed:', resource);
-        return res.json(resource);
-        break;
-  
-      default:
-        console.log('Unknown event type:', event_type);
-        return res.json(event_type);
-    }
-  });
+router.post('/webhook', paypalHook);
 
 // guest routes
 
