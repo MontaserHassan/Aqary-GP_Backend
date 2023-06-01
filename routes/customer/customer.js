@@ -1,6 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-const { default: paypalHook } = require('../../controllers/paypalHook');
+const paypalHook = require('../../controllers/paypalHook');
 const router = express.Router();
 const webhookSecret = process.env.WEBHOOK_SECRET;
 
@@ -10,9 +10,9 @@ router.get('/', (req, res) => {
     res.sendStatus(200);
 })
 
+console.log(paypalHook)
 
-
-router.post('/webhook', paypalHook);
+router.post('/checkout/webhook', paypalHook);
 
 // guest routes
 
