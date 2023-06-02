@@ -1,5 +1,5 @@
 const Property = require("../models/propertyModel");
-//  create new property 
+//  create new property
 const addProperty = (req, res, next) => {
   const {
     address,
@@ -16,7 +16,7 @@ const addProperty = (req, res, next) => {
     paymentOption,
     subscribe,
   } = req.body;
-  const property = new Property.Property({
+  const property = new Property({
     address: address,
     city: city,
     title: title,
@@ -42,9 +42,9 @@ const addProperty = (req, res, next) => {
       res.json(error);
     });
 };
-// get all Properties 
+// get all Properties
 const getAllProperties = (req, res, next) => {
-  Property.Property.find()
+  Property.find()
     .then((response) => {
       res.json(response);
     })
@@ -53,6 +53,14 @@ const getAllProperties = (req, res, next) => {
     });
 };
 
+const getProperty = (req, res, next) => {
+  const { params: { id } } = req;
 
+  Property.findById(id)
+    .then((response) => {
+      res.json(response);
+    })
+    .catch((error) => { res.json(error) });
+};
 
-module.exports = { addProperty, getAllProperties };
+module.exports = { addProperty, getAllProperties, getProperty };

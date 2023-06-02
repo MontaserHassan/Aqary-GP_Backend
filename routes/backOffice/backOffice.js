@@ -12,5 +12,6 @@ const router = express.Router();
 
 router.post('/property', propertyController.addProperty);
 router.get('/property', propertyController.getAllProperties);
+router.get('/property/:id', propertyController.getProperty);
 
 module.exports = router;
