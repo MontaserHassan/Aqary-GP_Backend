@@ -1,5 +1,5 @@
 const Property = require("../models/propertyModel");
-
+//  create new property 
 const addProperty = (req, res, next) => {
   const {
     address,
@@ -33,7 +33,18 @@ const addProperty = (req, res, next) => {
     subscribe: subscribe,
   });
 
-  property.save()
+  property
+    .save()
+    .then((response) => {
+      res.json(response);
+    })
+    .catch((error) => {
+      res.json(error);
+    });
+};
+// get all Properties 
+const getAllProperties = (req, res, next) => {
+  Property.Property.find()
     .then((response) => {
       res.json(response);
     })
@@ -42,4 +53,6 @@ const addProperty = (req, res, next) => {
     });
 };
 
-module.exports = { addProperty };
+
+
+module.exports = { addProperty, getAllProperties };

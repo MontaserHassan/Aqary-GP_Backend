@@ -11,6 +11,6 @@ const router = express.Router();
 // all admin routes 
 
 router.post('/property', propertyController.addProperty);
-
+router.get('/property', propertyController.getAllProperties);
 
 module.exports = router;
