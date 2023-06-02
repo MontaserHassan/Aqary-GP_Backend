@@ -12,4 +12,6 @@ router.post("/property", propertyController.addProperty);
 router.get("/property", propertyController.getAllProperties);
 router.get("/property/:id", propertyController.getProperty);
 router.get('/property/update/:id', propertyController.editProperty);
+router.get('/property/delete/:id', propertyController.deleteProperty);
+
 module.exports = router;

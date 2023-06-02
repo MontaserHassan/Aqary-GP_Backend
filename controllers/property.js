@@ -66,9 +66,11 @@ const getProperty = (req, res, next) => {
     });
 };
 
-// edit Property by id  
+// edit Property by id
 const editProperty = (req, res, next) => {
-  const { params: { id } } = req;
+  const {
+    params: { id },
+  } = req;
   const {
     address: address,
     city: city,
@@ -84,23 +86,35 @@ const editProperty = (req, res, next) => {
     paymentOption: paymentOption,
     subscribe: subscribe,
   } = req.body;
-  Property.findById(id).then((property) => {
-    property.address = address;
-    property.city = city;
-    property.level = level;
-    property.rooms = rooms;
-    property.baths = baths;
-    property.area = area;
-    property.description = description;
-    property.contractPhone = contractPhone;
-    property.photos = photos;
-    property.paymentOption = paymentOption;
-    property.subscribe = subscribe;
+  Property.findById(id)
+    .then((property) => {
+      property.address = address;
+      property.city = city;
+      property.level = level;
+      property.rooms = rooms;
+      property.baths = baths;
+      property.area = area;
+      property.description = description;
+      property.contractPhone = contractPhone;
+      property.photos = photos;
+      property.paymentOption = paymentOption;
+      property.subscribe = subscribe;
 
-   return property.save();
-  })
-.then(()=>{res.json("Updated Succesful")})
-.catch((error)=>{res.json(error)});
+      return property.save();
+    })
+    .then(() => {
+      res.json('Updated Succesful');
+    })
+    .catch((error) => {
+      res.json(error);
+    });
 };
 
-module.exports = { addProperty, getAllProperties, getProperty, editProperty };
+const deleteProperty = (req, res, next)=>{
+
+  const { params: { id } } = req;
+
+  Property.findByIdAndDelete(id).then(() => { res.json('Deleted Success')}).catch((error)=> res.json(error));
+}
+
+module.exports = { addProperty, getAllProperties, getProperty, editProperty, deleteProperty };
