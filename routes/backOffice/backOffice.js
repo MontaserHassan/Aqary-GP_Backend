@@ -1,5 +1,6 @@
 const express = require('express');
 
+const propertyController = require('../../controllers/property');
 
 const router = express.Router();
 
@@ -9,6 +10,7 @@ const router = express.Router();
 
 // all admin routes 
 
+router.post('/property', propertyController.addProperty);
 
 
 module.exports = router;
