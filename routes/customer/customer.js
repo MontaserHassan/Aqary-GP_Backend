@@ -7,9 +7,9 @@ const router = express.Router();
 
 // all customer routes
 // for everyone
-// router.get('/', havePermission('blockUser'), (req, res) => res.json({
-//   message: 'hello world!',
-// }));
+router.get('/testPermission', havePermission('blockUser'), (req, res) => res.json({
+  message: 'hello world!',
+}));
 router.get('/', roleName('admin'), (req, res) => res.json({
   message: 'hello world!',
 }));
