@@ -81,6 +81,16 @@ const getProperty = asyncFunction(async (req, res) => {
 // edit Property by id
 
 const editProperty = asyncFunction(async (req, res) => {
+  if (!req.files || req.files.length === 0)
+    throw { status: 400, message: 'no images uploaded' };
+  const photos = await Promise.all(
+    req.files.map(async (file) => {
+      const photo = await createUrlProperty(
+        `${file.destination}/${file.filename}`
+      );
+      return photo;
+    }),
+  );
   const {
     params: { id },
   } = req;
@@ -103,11 +113,10 @@ const editProperty = asyncFunction(async (req, res) => {
     },
     {
       new: true,
-    },
+    }
   );
-  if (!updatedProperty) throw {status: 404, message: 'property cant update'};
+  if (!updatedProperty) throw { status: 404, message: "property cant update" };
   res.status(200).send(updatedProperty);
-
 });
 
 const deleteProperty = (req, res, next) => {
