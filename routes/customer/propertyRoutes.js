@@ -8,16 +8,16 @@ const router = express.Router();
 
 
 router.use(propertyFileParser); // --> middleware for handle images
-router.get("/property", propertyController.getAllProperties);
-router.get("/property/:id", propertyController.getProperty);
+router.get("/", propertyController.getAllProperties);
+router.get("/:id", propertyController.getProperty);
 
 
 // middleware for authenticate current user
 
 
-router.post("/property", validation(propertyValidator.createProperty), propertyController.createProperty);
-router.patch("/property/:id", propertyController.editProperty);
-router.delete("/property/:id", propertyController.deleteProperty);
+router.post("/", validation(propertyValidator.createProperty), propertyController.createProperty);
+router.patch("/:id", propertyController.editProperty);
+router.delete("/:id", propertyController.deleteProperty);
 
 
 

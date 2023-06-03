@@ -12,7 +12,7 @@ const router = express.Router();
 //   message: 'hello world!',
 // }));
 
-router.use(propertyRoutes); // ---> route to property
+router.use('/property', propertyRoutes); // ---> route to property
 
 router.get('/', roleName('admin'), (req, res) => res.json({
   message: 'hello world!',
