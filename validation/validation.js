@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const asyncFunction = require("../middlewares/async");
+const { asyncFunction } = require("../middlewares/asyncHandler");
 
 const validation = (schema) =>
     asyncFunction(async (req, res, next) => {
@@ -8,7 +8,7 @@ const validation = (schema) =>
             if (schema[key]) {
                 const validation = schema[key].validate(req[key]);
                 if (validation.error) {
-                    errorValidation.push(validation.error);
+                errorValidation.push(validation.error);
                 }
             }
         });
@@ -17,10 +17,26 @@ const validation = (schema) =>
         } else {
             next();
         }
-    });
+    }
+);
 
 const propertyValidator = {
-    createProperty: {},
+    createProperty: {
+        body: Joi.object().keys({
+            address: Joi.string().required(),
+            city: Joi.string().required(),
+            title: Joi.string().required().valid("villa", "shale", "apartment"),
+            level: Joi.number().integer().required(),
+            rooms: Joi.number().integer().required(),
+            baths: Joi.number().integer().required(),
+            area: Joi.number().integer().required(),
+            description: Joi.string().required(),
+            price: Joi.number().required(),
+            contractPhone: Joi.string().required(),
+            paymentOption: Joi.string().required().valid("cash", "master-card"),
+            subscribe: Joi.string().required().valid("day", "week", "month"),
+        })
+    },
     updateProperty: {},
 };
 
