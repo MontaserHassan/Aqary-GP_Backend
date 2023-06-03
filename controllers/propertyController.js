@@ -80,34 +80,34 @@ const getProperty = asyncFunction(async (req, res) => {
 
 // edit Property by id
 
-
 const editProperty = asyncFunction(async (req, res) => {
   const {
     params: { id },
   } = req;
-
-  const selectedProperty = await Property.findById(id);
-  if (! selectedProperty) throw {status: 404, message: 'property not found'};
-  
-  selectedProperty.address = req.body.address;
-  selectedProperty.city = req.body.city;
-  selectedProperty.level = req.body.level;
-  selectedProperty.rooms = req.body.rooms;
-  selectedProperty.baths = req.body.baths;
-  selectedProperty.area = req.body.area;
-  selectedProperty.description = req.body.description;
-  selectedProperty.price = req.body.price;
-  selectedProperty.contractPhone = req.body.contractPhone;
-  selectedProperty.photos = req.body.photos;
-  selectedProperty.paymentOption = req.body.paymentOption;
-  selectedProperty.subscribe = req.body.subscribe;
-  selectedProperty.endTime = req.body.endTime;
-  const updatedProperty = await selectedProperty.save();
-
-  if(!updatedProperty) throw {status: 404, message: 'property not found'};
-  
+  const updatedProperty = await Property.findByIdAndUpdate(
+    { _id: id },
+    {
+      address: req.body.address,
+      city: req.body.city,
+      level: req.body.level,
+      rooms: req.body.rooms,
+      baths: req.body.baths,
+      area: req.body.area,
+      description: req.body.description,
+      price: req.body.price,
+      contractPhone: req.body.contractPhone,
+      photos: req.body.photos,
+      paymentOption: req.body.paymentOption,
+      subscribe: req.body.subscribe,
+      endTime: req.body.endTime,
+    },
+    {
+      new: true,
+    },
+  );
+  if (!updatedProperty) throw {status: 404, message: 'property cant update'};
   res.status(200).send(updatedProperty);
-  
+
 });
 
 const deleteProperty = (req, res, next) => {
