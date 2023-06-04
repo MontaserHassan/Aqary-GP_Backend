@@ -41,12 +41,8 @@ const createUrlProperty = async (photoUrl) => {
 };
 
 
-const deleteUrlPhoto = async(photoUrl) => {
-  cloudinary.uploader.destroy(photoUrl, { resource_type: "image" }).then(
-    result=>console.log(result)
-  );
-}
-
+const deleteUrlPhoto = async(photoUrl) => { await cloudinary.uploader.destroy( photoUrl, { resource_type: "image" } ) }
+// .then( result=>console.log(result) )
 
 const userStorage = multer.diskStorage({
   destination: "public/user-photos/",
