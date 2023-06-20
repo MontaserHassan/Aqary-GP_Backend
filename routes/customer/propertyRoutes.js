@@ -16,7 +16,7 @@ router.get("/:id", propertyController.getProperty);
 
 
 router.post("/", validation(propertyValidator.createProperty), propertyController.createProperty);
-router.patch("/:id", propertyController.editProperty);
+router.patch("/:id", validation(propertyValidator.updateProperty), propertyController.editProperty);
 router.delete("/:id", propertyController.deleteProperty);
 
 

@@ -1,6 +1,13 @@
-const Property = require("../models/propertyModel");
-const { asyncFunction } = require("../middlewares/asyncHandler");
-const { createUrlProperty, deleteUrlPhoto } = require("../middlewares/fileParser");
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-console */
+/* eslint-disable comma-dangle */
+/* eslint-disable no-throw-literal */
+/* eslint-disable no-multiple-empty-lines */
+/* eslint-disable spaced-comment */
+const Property = require('../models/propertyModel');
+const { asyncFunction } = require('../middlewares/asyncHandler');
+const { createUrlProperty, deleteUrlPhoto } = require('../middlewares/fileParser');
 
 
 
@@ -11,14 +18,14 @@ const calculateEndTime = (duration) => {
   const millisecondsInDay = 24 * 60 * 60 * 1000; // Assuming a day is 24 hours
   const currentTime = new Date();
   let durationInMilliseconds;
-  if (duration === "day") {
+  if (duration === 'day') {
     durationInMilliseconds = millisecondsInDay;
-  } else if (duration === "week") {
+  } else if (duration === 'week') {
     durationInMilliseconds = 7 * millisecondsInDay;
-  } else if (duration === "month") {
+  } else if (duration === 'month') {
     durationInMilliseconds = 30 * millisecondsInDay;
   } else {
-    throw new Error("Invalid duration");
+    throw new Error('Invalid duration');
   }
   const endTime = new Date(currentTime.getTime() + durationInMilliseconds);
   return endTime;
@@ -29,11 +36,10 @@ const calculateEndTime = (duration) => {
 
 
 const createProperty = asyncFunction(async (req, res) => {
-  if (!req.files || req.files.length === 0)
-    throw { status: 400, message: "no images uploaded" };
+  if (!req.files || req.files.length === 0) throw { status: 400, message: 'no images uploaded' };
   const photos = await Promise.all(
     req.files.map(async (file) => {
-      const photo = await createUrlProperty( `${file.destination}/${file.filename}` );
+      const photo = await createUrlProperty(`${file.destination}/${file.filename}`);
       return photo;
     })
   );
@@ -64,7 +70,7 @@ const createProperty = asyncFunction(async (req, res) => {
 
 const getAllProperties = asyncFunction(async (req, res) => {
   const properties = await Property.find();
-  if (!properties) throw { status: 404, message: "No Properties Found" };
+  if (!properties) throw { status: 404, message: 'No Properties Found' };
   res.status(200).send(properties);
 });
 
@@ -74,26 +80,26 @@ const getAllProperties = asyncFunction(async (req, res) => {
 
 const getProperty = asyncFunction(async (req, res) => {
   const property = await Property.findById({ _id: req.params.id });
-  if (!property) throw { status: 404, message: "No Properties Found" };
+  if (!property) throw { status: 404, message: 'No Properties Found' };
   res.status(200).send(property);
 });
 
-// edit Property by id
+
+//////////////////////////////////// update Property ///////////////////////////////////////
+
 
 const editProperty = asyncFunction(async (req, res) => {
-  if (!req.files || req.files.length === 0)
-    throw { status: 400, message: 'no images uploaded' };
+  if (!req.files || req.files.length === 0) throw { status: 400, message: 'no images uploaded' };
   const photos = await Promise.all(
     req.files.map(async (file) => {
       const photo = await createUrlProperty(
         `${file.destination}/${file.filename}`
       );
       return photo;
-    }),
+    })
   );
-  const { params: { id } } = req;
   const updatedProperty = await Property.findByIdAndUpdate(
-    { _id: id },
+    { _id: req.params.id },
     {
       address: req.body.address,
       city: req.body.city,
@@ -108,25 +114,34 @@ const editProperty = asyncFunction(async (req, res) => {
       paymentOption: req.body.paymentOption,
       subscribe: req.body.subscribe,
       endTime: req.body.endTime,
-    }, { new: true }
+    },
+    { new: true },
   );
-  if (!updatedProperty) throw { status: 404, message: "property cant update" };
+  // eslint-disable-next-line no-throw-literal
+  if (!updatedProperty) throw { status: 404, message: 'property cant update' };
   res.status(200).send(updatedProperty);
 });
 
 
 //////////////////////////////////// delete Property ///////////////////////////////////////
 
+
 const deleteProperty = asyncFunction(async (req, res) => {
   const property = await Property.findById(req.params.id);
-  if (!property) throw { status: 404, message: "Property not found" };
+  if (!property) throw { status: 404, message: 'Property not found' };
   for (const photoUrl of property.photo) {
-    const photoName = photoUrl.split("/").pop().split(".")[0];
-    console.log(photoName)
+    const photoName = photoUrl.split('/').pop().split('.')[0];
+    console.log(photoName);
     await deleteUrlPhoto(photoName);
   }
   const deletedProperty = await Property.findByIdAndDelete(req.params.id);
   res.status(200).send(deletedProperty);
+});
+
+
+//////////////////////////////////// delete Property ///////////////////////////////////////
+
+const searchOnProperty = asyncFunction(async(req, res) => {
 });
 
 
