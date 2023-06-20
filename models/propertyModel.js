@@ -1,5 +1,15 @@
-const mongoose = require("mongoose");
-const schedule = require("node-schedule");
+/* eslint-disable no-console */
+/* eslint-disable no-use-before-define */
+/* eslint-disable eol-last */
+/* eslint-disable func-names */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable comma-dangle */
+/* eslint-disable spaced-comment */
+/* eslint-disable max-len */
+/* eslint-disable no-multiple-empty-lines */
+const mongoose = require('mongoose');
+const schedule = require('node-schedule');
 
 const { Schema } = mongoose;
 
@@ -15,7 +25,7 @@ const propertySchema = new Schema(
     },
     title: {
       type: String,
-      enum: ["villa", "shale", "apartment"],
+      enum: ['villa', 'shale', 'apartment'],
       required: true,
     },
     level: {
@@ -52,17 +62,17 @@ const propertySchema = new Schema(
     },
     paymentOption: {
       type: String,
-      enum: ["cash", "master-card"],
+      enum: ['cash', 'master-card'],
       required: true,
     },
     subscribe: {
       type: String,
-      enum: ["day", "week", "month"],
+      enum: ['day', 'week', 'month'],
       required: true,
     },
     endTime: {
       type: Date,
-    }
+    },
   },
   {
     timestamps: true,
@@ -90,6 +100,9 @@ propertySchema.pre('save', function (next) {
   next();
 });
 
-const Property = mongoose.model("Property", propertySchema);
+
+const Property = mongoose.model('Property', propertySchema);
+
+
 
 module.exports = Property;

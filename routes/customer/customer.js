@@ -1,5 +1,7 @@
+/* eslint-disable no-multiple-empty-lines */
 const express = require('express');
 const propertyRoutes = require('./propertyRoutes');
+const authRoutes = require('./authRoutes');
 const paypalHook = require('../../controllers/paypalHook');
 const havePermission = require('../../middlewares/havePermission');
 const roleName = require('../../middlewares/roleName');
@@ -15,6 +17,7 @@ router.get('/testPermission', havePermission('blockUser'), (req, res) => res.jso
 //   message: 'hello world!',
 // }));
 
+router.use('/auth', authRoutes); // ---> route to property
 router.use('/property', propertyRoutes); // ---> route to property
 
 router.get('/', roleName('admin'), (req, res) => res.json({
@@ -23,8 +26,10 @@ router.get('/', roleName('admin'), (req, res) => res.json({
 
 router.post('/checkout/webhook', paypalHook);
 
-// authenticated routes
-
 // middleware for check current user
+
+
+// authenticated routes
+router.use('/auth/property', propertyRoutes); // ---> route to property
 
 module.exports = router;

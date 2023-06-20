@@ -55,14 +55,23 @@ const propertyValidator = {
       paymentOption: Joi.string().valid("cash", "master-card"),
       subscribe: Joi.string().valid("day", "week", "month"),
     }),
+    params: Joi.object()
+      .required()
+      .keys({
+        id: Joi.string().length(24).required(),
+      }),
+  },
+  searching: {
     params: Joi.object().required().keys({
-      id: Joi.string().length(24).required(),
+      city: Joi.string(),
     }),
   },
   idParams: {
-    params: Joi.object().required().keys({
-      idd: Joi.string().length(24).required(),
-    }),
+    params: Joi.object()
+      .required()
+      .keys({
+        idd: Joi.string().length(24).required(),
+      }),
   },
 };
 

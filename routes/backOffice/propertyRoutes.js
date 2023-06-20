@@ -3,8 +3,8 @@
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable quotes */
 const express = require("express");
-const propertyController = require('../../controllers/propertyController.js');
 const { validation, propertyValidator } = require("../../validation/validation.js");
+const propertyController = require('../../controllers/propertyController.js');
 
 
 const router = express.Router();
@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get("/", propertyController.getAllProperties);
 router.get("/:id", validation(propertyValidator.idParams), propertyController.getProperty);
-router.get("/search/:city", validation(propertyValidator.searching), propertyController.searchOnProperty);
+router.delete("/:id", propertyController.deleteProperty);
 
 
 

@@ -139,10 +139,15 @@ const deleteProperty = asyncFunction(async (req, res) => {
 });
 
 
-//////////////////////////////////// delete Property ///////////////////////////////////////
+//////////////////////////////////// search on Property ///////////////////////////////////////
 
-const searchOnProperty = asyncFunction(async(req, res) => {
+
+const searchOnProperty = asyncFunction(async (req, res) => {
+  const property = await Property.find({ city: { $regex: new RegExp({ $options: 'i', value: req.params.city }) } });
+  console.log(property);
+  res.status(200).send(property);
 });
+
 
 
 
@@ -152,4 +157,5 @@ module.exports = {
   getProperty,
   editProperty,
   deleteProperty,
+  searchOnProperty,
 };
