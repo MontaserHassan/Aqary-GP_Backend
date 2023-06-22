@@ -1,7 +1,10 @@
-const router = require('express').Router;
+const express = require('express');
+
+
+const router = express.Router();
 
 const paypalHook = require('../../controllers/paypalHook');
 
-router.post('/checkout/webhook', paypalHook);
+router.post('/webhook', paypalHook);
 
 module.exports = router;
