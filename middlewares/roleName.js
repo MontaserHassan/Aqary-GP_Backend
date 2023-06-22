@@ -1,6 +1,5 @@
 /* eslint-disable consistent-return */
 module.exports = (role) => (req, res, next) => {
-  if (role === 'admin') next();
   const userTokenDecoded = {
     email: 'muhammed.adel.elshall@gmail.com',
     roleId: 2,

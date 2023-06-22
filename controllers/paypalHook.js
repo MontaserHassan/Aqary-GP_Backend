@@ -8,7 +8,6 @@ const client = new paypal.core.PayPalHttpClient(environment);
 
 const paypalHook = async (req, res) => {
   const event = req.body;
-  logger.info(req.body);
   if (event.event_type === 'PAYMENT.ORDER.CREATED') {
     const orderId = event.resource.id;
     logger.info(`Payment order created: ${orderId}`);
