@@ -1,9 +1,13 @@
+/* eslint-disable no-multiple-empty-lines */
+/* eslint-disable indent */
+/* eslint-disable function-paren-newline */
 /* eslint-disable no-shadow */
 /* eslint-disable no-throw-literal */
 /* eslint-disable quotes */
 /* eslint-disable implicit-arrow-linebreak */
 const Joi = require("joi");
 const { asyncFunction } = require("../middlewares/asyncHandler");
+
 
 const validation = (schema) =>
   asyncFunction(async (req, res, next) => {
@@ -21,7 +25,8 @@ const validation = (schema) =>
     } else {
       next();
     }
-  });
+  },
+);
 
 const propertyValidator = {
   createProperty: {
@@ -67,11 +72,9 @@ const propertyValidator = {
     }),
   },
   idParams: {
-    params: Joi.object()
-      .required()
-      .keys({
-        idd: Joi.string().length(24).required(),
-      }),
+    params: Joi.object().required().keys({
+      id: Joi.string().length(24).required(),
+    }),
   },
 };
 

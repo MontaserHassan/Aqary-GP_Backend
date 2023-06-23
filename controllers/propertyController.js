@@ -37,6 +37,7 @@ const calculateEndTime = (duration) => {
 
 const createProperty = asyncFunction(async (req, res) => {
   if (!req.files || req.files.length === 0) throw { status: 400, message: 'no images uploaded' };
+  console.log(req.files);
   const photos = await Promise.all(
     req.files.map(async (file) => {
       const photo = await createUrlProperty(`${file.destination}/${file.filename}`);
@@ -89,7 +90,8 @@ const getProperty = asyncFunction(async (req, res) => {
 
 
 const editProperty = asyncFunction(async (req, res) => {
-  if (!req.files || req.files.length === 0) throw { status: 400, message: 'no images uploaded' };
+  console.log(req.files);
+  // if (!req.files || req.files.length === 0) throw { status: 400, message: 'no images uploaded' };
   const photos = await Promise.all(
     req.files.map(async (file) => {
       const photo = await createUrlProperty(

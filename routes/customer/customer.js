@@ -2,6 +2,7 @@
 const express = require('express');
 const propertyRoutes = require('./propertyRoutes');
 const authRoutes = require('./authRoutes');
+const userRoutes = require('./userPropertyRoutes');
 const paypalHook = require('../../controllers/paypalHook');
 const havePermission = require('../../middlewares/havePermission');
 const roleName = require('../../middlewares/roleName');
@@ -30,6 +31,6 @@ router.post('/checkout/webhook', paypalHook);
 
 
 // authenticated routes
-router.use('/auth/property', propertyRoutes); // ---> route to property
+router.use('/auth/property', userRoutes); // ---> route to property
 
 module.exports = router;

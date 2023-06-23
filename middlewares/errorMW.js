@@ -1,5 +1,9 @@
+/* eslint-disable eol-last */
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
+/* eslint-disable indent */
 function errorHandler(err, req, res, next) {
-    console.error(err);
+    console.log(err);
     const statusCode = err.status || 500;
     const responseBody = {
         error: {
@@ -10,5 +14,5 @@ function errorHandler(err, req, res, next) {
 }
 
 module.exports = {
-    errorHandler
+    errorHandler,
 };
