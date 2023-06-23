@@ -15,6 +15,10 @@ const { Schema } = mongoose;
 
 const propertySchema = new Schema(
   {
+    userId: {
+      type: mongoose.Types.ObjectId,
+      ref: 'users',
+    },
     address: {
       type: String,
       required: true,

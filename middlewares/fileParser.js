@@ -1,11 +1,23 @@
+/* eslint-disable eol-last */
+/* eslint-disable consistent-return */
+/* eslint-disable no-else-return */
+/* eslint-disable eqeqeq */
+/* eslint-disable space-before-blocks */
+/* eslint-disable indent */
+/* eslint-disable prefer-const */
+/* eslint-disable no-console */
+/* eslint-disable no-multiple-empty-lines */
+/* eslint-disable semi */
+/* eslint-disable quotes */
+/* eslint-disable space-in-parens */
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
-const { cloudinary } = require("../config/cloudPhoto");
 const fs = require('fs');
+const { cloudinary } = require("../config/cloudPhoto");
 
 
 
-const createUrlUser = async(photoUrl) => {
+const createUrlUser = async (photoUrl) => {
   const folderName = 'User';
   let image = await cloudinary.uploader
     .upload(photoUrl, {
@@ -22,8 +34,9 @@ const createUrlUser = async(photoUrl) => {
     .catch((err) => console.log(err));
     return image
 };
+
 const createUrlProperty = async (photoUrl) => {
-    const folderName = "Property";
+  const folderName = "Property";
   let image = await cloudinary.uploader
     .upload(photoUrl, {
       resource_type: "image",
@@ -41,8 +54,8 @@ const createUrlProperty = async (photoUrl) => {
 };
 
 
-const deleteUrlPhoto = async(photoUrl) => { await cloudinary.uploader.destroy( photoUrl, { resource_type: "image" } ) }
-// .then( result=>console.log(result) )
+const deleteUrlPhoto = async (photoUrl) => { await cloudinary.uploader.destroy( photoUrl, { resource_type: "image" } ) };
+
 
 const userStorage = multer.diskStorage({
   destination: "public/user-photos/",
@@ -51,6 +64,7 @@ const userStorage = multer.diskStorage({
     cb(null, `${file.originalname}-${fileUUID}`);
   },
 });
+
 const propertyStorage = multer.diskStorage({
   destination: "public/property-photos/",
   filename(req, file, cb) {
@@ -60,7 +74,7 @@ const propertyStorage = multer.diskStorage({
 });
 
 
-function fileFilter (req, file, cb){
+function fileFilter(req, file, cb){
   if (file.mimetype == 'image/png' || file.mimetype == 'image/jpg' || file.mimetype == 'image/jpeg') {
     return cb(null, true);
   } else {
@@ -73,6 +87,7 @@ function fileFilter (req, file, cb){
 const userUpload = multer({ storage: userStorage, fileFilter, limits: { fileSize: 5000000 } }).single('image');
 const propertyUpload = multer({ storage: propertyStorage, fileFilter, limits: { fileSize: 5000000 } }).array("image", 5);
 
+
 const userFileParser = (req, res, next) => {
   userUpload(req, res, (err) => {
     if (err) {
@@ -81,6 +96,7 @@ const userFileParser = (req, res, next) => {
     next();
   });
 };
+
 const propertyFileParser = (req, res, next) => {
   propertyUpload(req, res, (err) => {
     if (err) {
@@ -97,5 +113,5 @@ module.exports = {
   propertyFileParser,
   createUrlUser,
   createUrlProperty,
-  deleteUrlPhoto
+  deleteUrlPhoto,
 };

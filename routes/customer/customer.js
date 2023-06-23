@@ -1,7 +1,8 @@
 /* eslint-disable no-multiple-empty-lines */
 const express = require('express');
-const propertyRoutes = require('./propertyRoutes');
 const authRoutes = require('./authRoutes');
+const propertyRoutes = require('./propertyRoutes');
+const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
 const havePermission = require('../../middlewares/havePermission');
 const roleName = require('../../middlewares/roleName');
@@ -16,7 +17,7 @@ router.use('/property', propertyRoutes); // ---> route to property
 
 
 // authenticated routes
-router.use('/auth/property', propertyRoutes); // ---> route to property
+router.use('/auth/property', userRoutes); // ---> route to property
 router.use('checkout', checkoutRoutes); // --
 
 module.exports = router;

@@ -5,7 +5,7 @@
 const express = require("express");
 const propertyController = require('../../controllers/propertyController.js');
 const { validation, propertyValidator } = require("../../validation/validation.js");
-const { propertyFileParser } = require('../../middlewares/fileParser');
+const { propertyFileParser } = require('../../middlewares/fileParser.js');
 
 
 const router = express.Router();
