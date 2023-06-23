@@ -8,25 +8,26 @@ const client = new paypal.core.PayPalHttpClient(environment);
 
 const paypalHook = async (req, res) => {
   const event = req.body;
-  logger.info(event);
-  if (event.event_type === 'PAYMENT.ORDER.CREATED') {
-    const orderId = event.resource.id;
-    logger.info(`Payment order created: ${orderId}`);
+  if (event.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
+    const captureId = event.resource.id;
+    const transactionId = event.resource.purchase_units[0].payments.captures[0].id;
+    const amount = event.resource.purchase_units[0].amount.value;
+    const currency = event.resource.purchase_units[0].amount.currency_code;
+    logger.info(`Event type: ${event.event_type}`);
+    logger.info(`Transaction ID: ${transactionId}`);
+    logger.info(`Amount: ${amount} ${currency}`);
 
     try {
-      const request = new paypal.orders.OrdersGetRequest(orderId);
-      const order = await client.execute(request);
+      const request = new paypal.payments.CapturesGetRequest(captureId);
+      const response = await client.execute(request);
+      const capture = response.result;
 
-      if (order.result.status === 'CREATED' && order.result.intent === 'CAPTURE') {
-        logger.info('Payment processed successfully');
-        logger.info(order);
-      } else {
-        logger.error(`Invalid order: ${JSON.stringify(order.result)}`);
-      }
+      logger.info(`Capture status: ${capture.status}`);
+      logger.info(`Capture amount: ${capture.amount.value} ${capture.amount.currency_code}`);
 
       res.sendStatus(200);
     } catch (err) {
-      logger.error(`Error retrieving order:${err}`);
+      logger.error(`Error retrieving capture ${captureId}: ${err}`);
       res.sendStatus(500);
     }
   } else {
