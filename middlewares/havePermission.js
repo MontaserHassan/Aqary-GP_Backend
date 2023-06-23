@@ -5,8 +5,10 @@ module.exports = (permission) => (req, res, next) => {
     roleId: 2,
     role: {
       name: 'admin',
-      blockUser: true,
-      deleteAds: true,
+      actions: {
+        blockUser: true,
+        deleteAds: true,
+      },
     },
   };
   if (!Object.keys(userTokenDecoded.role).includes(permission)) {

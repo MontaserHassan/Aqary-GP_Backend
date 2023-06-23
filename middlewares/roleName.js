@@ -5,11 +5,13 @@ module.exports = (role) => (req, res, next) => {
     roleId: 2,
     role: {
       name: 'admin',
-      blockUser: true,
-      deleteAds: true,
+      actions: {
+        blockUser: true,
+        deleteAds: true,
+      },
     },
   };
-  if (userTokenDecoded.role !== 'admin') {
+  if (userTokenDecoded.role.name !== role) {
     return res.json({
       message: 'You are not authorized to perform this action',
     });
