@@ -12,11 +12,11 @@ const router = express.Router();
 // for everyone
 router.use('/auth', authRoutes); // ---> route to property
 router.use('/property', propertyRoutes); // ---> route to property
-router.use('checkout', checkoutRoutes); // --
 // middleware for check current user
 
 
 // authenticated routes
 router.use('/auth/property', propertyRoutes); // ---> route to property
+router.use('checkout', checkoutRoutes); // --
 
 module.exports = router;
