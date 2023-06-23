@@ -18,6 +18,6 @@ router.use('/property', propertyRoutes); // ---> route to property
 
 // authenticated routes
 router.use('/auth/property', userRoutes); // ---> route to property
-router.use('checkout', checkoutRoutes); // --
+router.use('/checkout', checkoutRoutes); // --
 
 module.exports = router;
