@@ -16,7 +16,7 @@ module.exports = (roleName) => (req, res, next) => {
     },
   };
   const role = RoleModel.findOne({name: roleName});
-  if (userTokenDecoded.role.rank < role.rank) {
+  if (userTokenDecoded.role.rank > role.rank) {
     return res.json({
       message: 'You are not authorized to perform this action',
     });
