@@ -9,9 +9,9 @@ const client = new paypal.core.PayPalHttpClient(environment);
 const paypalHook = async (req, res) => {
   const event = req.body;
   logger.info(event);
-  if (event.event_type === 'PAYMENT.ORDER.CREATED') {
+  if (event.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
     const orderId = event.resource.id;
-    logger.info(`Payment order created: ${orderId}`);
+    logger.info(`Payment order compeleted: ${orderId}`);
 
     try {
       const request = new paypal.orders.OrdersGetRequest(orderId);
