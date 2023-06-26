@@ -1,4 +1,6 @@
+const logger = require('../config/logger');
 const TransactionModel = require('../models/TransactionModel');
+const Property = require('../models/propertyModel');
 
 const getProfitAndPercentageDifference = async () => {
   const today = new Date();
@@ -24,18 +26,47 @@ const getProfitAndPercentageDifference = async () => {
     return { thisMonthTotal, percentageDifference };
 }
 
-module.exports = async (req, res) => {
+const getCountPropertiesForEachCity = async (req, res) => {
+  try {
+    const countOfProperties = await Property.aggregate([
+      {
+        $group: {
+          _id: "$city",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          city: "$_id",
+          count: 1
+        }
+      },
+      { $limit: 5 }
+    ]);
+    res.json(countOfProperties);
+  } catch (err) {
+    logger.error(err.message);
+    throw new Error('Server error: ' + err.message);
+  };
+
+};
+
+const statistics = async (req, res) => {
   try {
     const { thisMonthTotal, percentageDifference } = await getProfitAndPercentageDifference();
-    const count = await TransactionModel.distinct('userId').countDocuments();
+    const countPaidUser = await TransactionModel.distinct('userId').countDocuments();
+    const countOfProperties = await Property.countDocuments();
     const profits = await TransactionModel.aggregate([
       { $match: { sender: false } },
       { $group: { _id: null, total: { $sum: '$amount' } } }
     ]);
     const totalProfits = profits.length ? profits[0].total : 0;
-    res.status(200).json({ count, totalProfits, thisMonthTotal, percentageDifference });
+    res.status(200).json({ countPaidUser, totalProfits, thisMonthTotal, percentageDifference, countOfProperties });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+module.exports = {statistics, getCountPropertiesForEachCity};
