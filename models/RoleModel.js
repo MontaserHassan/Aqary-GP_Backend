@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const defaultRoles = require('./defaults/roles');
+const logger = require('../config/logger');
 
 const actionSchema = new mongoose.Schema({
   // 1 is most powerfull value
@@ -26,7 +27,7 @@ const RoleModel = mongoose.model('Role', roleSchema);
 
 RoleModel.on('index', async (err) => {
   if (err) {
-    console.error(err);
+    logger.error(err);
   } else {
     const rolesCount = await RoleModel.countDocuments();
     if (rolesCount === 0) {
