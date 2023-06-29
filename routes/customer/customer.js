@@ -1,5 +1,6 @@
 /* eslint-disable no-multiple-empty-lines */
 const express = require('express');
+const userController = require('./../../controllers/userController');
 const authRoutes = require('./authRoute');
 const propertyRoutes = require('./propertyRoutes');
 const userRoutes = require("./userPropertyRoutes");
@@ -20,8 +21,7 @@ router.use('/property', propertyRoutes); // ---> route to property
 router.use('/auth/property', userRoutes); // ---> route to property
 router.use('/checkout', checkoutRoutes); // --
 
-//Mounting our Routes
-// router.use('/api/v1/users', authRoute);
+// router.use('/api/v1/users', userController.getAllUsers)
 
 
 module.exports = router;
