@@ -21,7 +21,8 @@ router.use('/property', propertyRoutes); // ---> route to property
 router.use('/auth/property', userRoutes); // ---> route to property
 router.use('/checkout', checkoutRoutes); // --
 
-// router.use('/api/v1/users', userController.getAllUsers)
+//Get all users
+router.use('/api/v1/users', userController.getAllUsers)
 
 
 module.exports = router;
