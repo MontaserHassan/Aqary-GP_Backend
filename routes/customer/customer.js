@@ -1,18 +1,19 @@
 /* eslint-disable no-multiple-empty-lines */
 const express = require('express');
-const authRoutes = require('./authRoutes');
+const userController = require('./../../controllers/userController');
+const authRoutes = require('./authRoute');
 const propertyRoutes = require('./propertyRoutes');
 const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
 const transactionRoutes = require('./TransactionRoutes')
 const havePermission = require('../../middlewares/havePermission');
 const roleName = require('../../middlewares/roleName');
-
+// const authRoute = require('./authRoute');
 const router = express.Router();
 
 // all customer routes
 // for everyone
-router.use('/auth', authRoutes); // ---> route to property
+router.use('/api/v1/users', authRoutes); // ---> route to property
 router.use('/property', propertyRoutes); // ---> route to property
 router.use('/transaction', transactionRoutes); // ---> route to
 // middleware for check current user
@@ -21,5 +22,9 @@ router.use('/transaction', transactionRoutes); // ---> route to
 // authenticated routes
 router.use('/auth/property', userRoutes); // ---> route to property
 router.use('/checkout', checkoutRoutes); // --
+
+//Get all users
+router.use('/api/v1/users', userController.getAllUsers)
+
 
 module.exports = router;

@@ -9,6 +9,8 @@ require('./config/database.js');
 const bodyParser = require('body-parser');
 const app = express();
 
+
+
 // initializeCache
 initializeCache();
 
@@ -30,5 +32,6 @@ app.use(helmet.hidePoweredBy('aqary tech.'));
 
 // routes
 app.use(require('./routes'));
+
 
 module.exports = app;
