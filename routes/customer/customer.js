@@ -11,7 +11,7 @@ const router = express.Router();
 
 // all customer routes
 // for everyone
-router.use('/auth', authRoutes); // ---> route to property
+router.use('/api/v1/users', authRoutes); // ---> route to property
 router.use('/property', propertyRoutes); // ---> route to property
 // middleware for check current user
 

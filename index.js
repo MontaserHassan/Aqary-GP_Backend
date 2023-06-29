@@ -8,6 +8,9 @@ const { limiter } = require('./config/security.js');
 require('./config/database.js');
 
 
+
+
+
 const app = express();
 
 
@@ -33,5 +36,6 @@ app.use(helmet.hidePoweredBy('aqary tech.'));
 
 // routes
 app.use(require('./routes'));
+
 
 module.exports = app;
