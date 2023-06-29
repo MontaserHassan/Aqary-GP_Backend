@@ -1,12 +1,12 @@
 /* eslint-disable no-multiple-empty-lines */
 const express = require('express');
-const authRoutes = require('./authRoutes');
+const authRoutes = require('./authRoute');
 const propertyRoutes = require('./propertyRoutes');
 const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
 const havePermission = require('../../middlewares/havePermission');
 const roleName = require('../../middlewares/roleName');
-
+// const authRoute = require('./authRoute');
 const router = express.Router();
 
 // all customer routes
@@ -19,5 +19,9 @@ router.use('/property', propertyRoutes); // ---> route to property
 // authenticated routes
 router.use('/auth/property', userRoutes); // ---> route to property
 router.use('/checkout', checkoutRoutes); // --
+
+//Mounting our Routes
+// router.use('/api/v1/users', authRoute);
+
 
 module.exports = router;
