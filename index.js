@@ -6,7 +6,7 @@ const { initializeCache } = require('./helpers/cache');
 require('dotenv').config();
 const { limiter } = require('./config/security.js');
 require('./config/database.js');
-
+const bodyParser = require('body-parser');
 const app = express();
 
 // initializeCache
@@ -22,7 +22,7 @@ app.use(limiter);
 // previent extended fields and set limit
 app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 app.use(express.json({ extended: false, limit: '1mb' }));
-
+app.use(bodyParser.json());
 // header security
 app.use(helmet());
 app.use(helmet.xssFilter());

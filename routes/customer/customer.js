@@ -4,6 +4,7 @@ const authRoutes = require('./authRoutes');
 const propertyRoutes = require('./propertyRoutes');
 const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
+const transactionRoutes = require('./TransactionRoutes')
 const havePermission = require('../../middlewares/havePermission');
 const roleName = require('../../middlewares/roleName');
 
@@ -13,6 +14,7 @@ const router = express.Router();
 // for everyone
 router.use('/auth', authRoutes); // ---> route to property
 router.use('/property', propertyRoutes); // ---> route to property
+router.use('/transaction', transactionRoutes); // ---> route to
 // middleware for check current user
 
 
