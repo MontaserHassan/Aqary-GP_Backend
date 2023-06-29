@@ -24,3 +24,14 @@ exports.signup = asyncFunction(async (req, res, next) => {
     });
 
 });
+
+exports.login = (req, res, next) => {
+    const {email, password} = req.body;
+
+    //1) Check if email and password exist
+    if(!email || !password) {
+        
+    }
+
+    //2)Check if user exists and password is correct
+}
