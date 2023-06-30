@@ -8,18 +8,31 @@
 const Property = require('../models/propertyModel');
 const { asyncFunction } = require('../middlewares/asyncHandler');
 const { createUrlProperty, deleteUrlPhoto } = require('../middlewares/fileParser');
+require('../boot/propertyBooting');
 
 
 
 //////////////////////////////////// handle endTime ///////////////////////////////////////
 
 
+// const calculateEndTime = (duration) => {
+//   let durationInMilliseconds = 3 * 60 * 1000; // 3 minutes
+//   const currentTime = new Date();
+//   if (duration === 'half') {
+//     durationInMilliseconds = new Date(currentTime.getTime() + durationInMilliseconds);
+//   }
+//   const endTime = durationInMilliseconds;
+//   return endTime;
+// };
+
 const calculateEndTime = (duration) => {
-  const millisecondsInDay = 24 * 60 * 60 * 1000; // Assuming a day is 24 hours
+  const millisecondsInDay = 1 * 60 * 60 * 1000; // Assuming a day is one hour
   const currentTime = new Date();
   let durationInMilliseconds;
-  if (duration === 'day') {
+  if (duration === 'hour') {
     durationInMilliseconds = millisecondsInDay;
+  } else if (duration === 'day') {
+    durationInMilliseconds = 24 * millisecondsInDay;
   } else if (duration === 'week') {
     durationInMilliseconds = 7 * millisecondsInDay;
   } else if (duration === 'month') {
@@ -60,19 +73,27 @@ const createProperty = asyncFunction(async (req, res) => {
     subscribe: req.body.subscribe,
     endTime: calculateEndTime(req.body.subscribe),
   });
+  console.log(property);
   property.save()
     .then(() => res.status(200).send(property))
     .catch((error) => res.json(error));
 });
 
 
-//////////////////////////////// get all Properties//////////////////////////////////////
+//////////////////////////////// get all Properties //////////////////////////////////////
 
 
 const getAllProperties = asyncFunction(async (req, res) => {
-  const properties = await Property.find();
-  if (!properties) throw { status: 404, message: 'No Properties Found' };
-  res.status(200).send(properties);
+  const pageSize = 8;
+  let page = req.query.page || 1;
+  let skip = (page - 1) * pageSize;
+  const totalProperties = await Property.countDocuments();
+  const totalPages = Math.ceil(totalProperties / pageSize);
+  if (page > totalPages) {
+    throw { status: 404, message: 'There are no properties in this page' };
+  };
+  const properties = await Property.find().skip(skip).sort({ createdAt: -1 }).limit(pageSize);
+  res.status(200).send({ page: page, pageSize: pageSize, properties: properties, totalPages: totalPages, totalProperties: totalProperties });
 });
 
 
@@ -114,8 +135,8 @@ const editProperty = asyncFunction(async (req, res) => {
       contractPhone: req.body.contractPhone,
       photo: photos,
       paymentOption: req.body.paymentOption,
-      subscribe: req.body.subscribe,
-      endTime: req.body.endTime,
+      // subscribe: req.body.subscribe,
+      // endTime: req.body.endTime,
     },
     { new: true },
   );

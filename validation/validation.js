@@ -42,7 +42,7 @@ const propertyValidator = {
       price: Joi.number().required(),
       contractPhone: Joi.string().required(),
       paymentOption: Joi.string().required().valid("cash", "master-card"),
-      subscribe: Joi.string().required().valid("day", "week", "month"),
+      subscribe: Joi.string().required().valid("half", "hour", "day", "week", "month"),
     }),
   },
   updateProperty: {
@@ -58,7 +58,6 @@ const propertyValidator = {
       price: Joi.number(),
       contractPhone: Joi.string(),
       paymentOption: Joi.string().valid("cash", "master-card"),
-      subscribe: Joi.string().valid("day", "week", "month"),
     }),
     params: Joi.object()
       .required()
