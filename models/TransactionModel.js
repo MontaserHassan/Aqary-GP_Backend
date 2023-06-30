@@ -6,23 +6,40 @@ const transactionSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  sender : {
-    // if user send money to us => true 
-    // we send money to user's wallet => false
-    type: Boolean,
-    required: true
+  propertyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Property',
+  },
+  paymentMethod: {
+    type: String,
+    required: true,
+  },
+  TransactionType: {
+    type: String,
+    enum: ['subscription', 'property', 'wallet']
+  },
+  propertyDuration: {
+    type: String,
+    enum: ['day', 'week', 'month'],
+    required: function () { return this.TransactionType === 'property' },
+  },
+  subscriptionDuration: {
+    type: String,
+    enum: ['day', 'week', 'month'],
+    required: function () { return this.TransactionType === 'subscription' },
+  },
+  walletAmount: {
+    type: Number,
+    required: function () {
+      return this.transactionType === 'wallet';
+    },
   },
   amount: {
     type: Number,
     required: true
   },
-  description: {
-    type: String,
-    enum: ['userBuyPropertyAds', 'userBuyAds', 'userPutInHisWallet'],
-    required: true
-  }
 }, {
-    timestamps: true
+  timestamps: true
 });
 
 const TransactionModel = mongoose.model('Transaction', transactionSchema);
