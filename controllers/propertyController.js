@@ -34,9 +34,9 @@ const calculateEndTime = (duration) => {
   } else if (duration === 'day') {
     durationInMilliseconds = 24 * millisecondsInDay;
   } else if (duration === 'week') {
-    durationInMilliseconds = 7 * millisecondsInDay;
+    durationInMilliseconds = 7 * 24 * millisecondsInDay;
   } else if (duration === 'month') {
-    durationInMilliseconds = 30 * millisecondsInDay;
+    durationInMilliseconds = 30 * 24 * millisecondsInDay;
   } else {
     throw new Error('Invalid duration');
   }
@@ -111,7 +111,7 @@ const getProperty = asyncFunction(async (req, res) => {
 
 
 const editProperty = asyncFunction(async (req, res) => {
-  console.log(req.files);
+  // console.log(req.files);
   // if (!req.files || req.files.length === 0) throw { status: 400, message: 'no images uploaded' };
   const photos = await Promise.all(
     req.files.map(async (file) => {
@@ -135,8 +135,6 @@ const editProperty = asyncFunction(async (req, res) => {
       contractPhone: req.body.contractPhone,
       photo: photos,
       paymentOption: req.body.paymentOption,
-      // subscribe: req.body.subscribe,
-      // endTime: req.body.endTime,
     },
     { new: true },
   );
@@ -166,8 +164,12 @@ const deleteProperty = asyncFunction(async (req, res) => {
 
 
 const searchOnProperty = asyncFunction(async (req, res) => {
-  const property = await Property.find({ city: { $regex: new RegExp({ $options: 'i', value: req.params.city }) } });
-  console.log(property);
+  const property = await Property.find({ city: { $regex: new RegExp( req.params.city, 'i' ) } });
+  // console.log(property.length)
+  if (!property) {
+    throw { status: 404, message: 'Property not found' };
+  }
+  // console.log(property);
   res.status(200).send(property);
 });
 
