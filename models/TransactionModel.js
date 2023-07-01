@@ -4,11 +4,15 @@ const transactionSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    // required: true
   },
   propertyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Property',
+  },
+  paymentId: {
+    type: String,
+    required: true
   },
   paymentMethod: {
     type: String,

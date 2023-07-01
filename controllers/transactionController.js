@@ -48,11 +48,14 @@ const addMoneyToWallet = async (userId, amount, paymentMethod) => {
 }
 
 
+
+
 const createTransaction = async (req, res) => {
 
   try {
-    const { userId, propertyId, amount, paymentMethod, duration, TransactionType } = req.body;
-    console.log(req.body);
+    // const { userId, propertyId, amount, paymentMethod, duration, TransactionType } = req.body;
+    const {id} = req.body.transactionsData;
+    const TransactionType = "asd";
     if (TransactionType == 'subscription') {
 
       await subscribeService(userId, amount, paymentMethod, duration);
@@ -66,7 +69,8 @@ const createTransaction = async (req, res) => {
     else if (TransactionType === 'wallet') {
 
       await addMoneyToWallet(userId, amount, paymentMethod)
-    } else {
+    } 
+    else {
       return res.status(400).json({ error: 'Invalid transaction type' });
     }
     return res.status(200).json({ message: 'Transaction created successfully' });
