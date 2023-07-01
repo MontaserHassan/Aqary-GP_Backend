@@ -20,7 +20,6 @@ router.post("/create-paypal-order", async (req, res) => {
 
 router.post("/capture-paypal-order", async (req, res) => {
   const { orderID } = req.body;
-  console.log("Muhammed Adel: ", orderID);
   try {
     const captureData = await paypalApi.capturePayment(orderID);
     res.json(captureData);
