@@ -9,7 +9,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-multiple-empty-lines */
 const mongoose = require('mongoose');
-const schedule = require('node-schedule');
+
 
 const { Schema } = mongoose;
 
@@ -71,7 +71,7 @@ const propertySchema = new Schema(
     },
     subscribe: {
       type: String,
-      enum: ['day', 'week', 'month'],
+      enum: ['half', 'hour', 'day', 'week', 'month'],
       required: true,
     },
     endTime: {
@@ -82,27 +82,6 @@ const propertySchema = new Schema(
     timestamps: true,
   }
 );
-
-
-//////////////////////////////////// Schedule Property Deletion ///////////////////////////////////////
-
-const schedulePropertyDeletion = (propertyId, endTime) => {
-  schedule.scheduleJob(endTime, async () => {
-    try {
-      await Property.findByIdAndDelete(propertyId);
-      console.log(`Property with ID ${propertyId} deleted at ${endTime}`);
-    } catch (error) {
-      console.log(`Error deleting property with ID ${propertyId}: ${error}`);
-    }
-  });
-};
-
-propertySchema.pre('save', function (next) {
-  const propertyId = this._id;
-  const endTime = this.endTime;
-  schedulePropertyDeletion(propertyId, endTime);
-  next();
-});
 
 
 const Property = mongoose.model('Property', propertySchema);

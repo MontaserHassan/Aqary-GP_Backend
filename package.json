@@ -1,11 +1,12 @@
 {
-  "name": "homezone",
+  "name": "Aqary-EG",
   "version": "1.0.0",
   "description": "real state website to sale and rent apartment",
   "main": "app.js",
   "scripts": {
     "start": "nodemon .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm i"
   },
   "author": "montaserhassan - mohamedadel - mostafaramadan - omarhesham - amanikhaled",
   "license": "ISC",
@@ -31,6 +32,8 @@
     "node-cron": "^3.0.2",
     "node-schedule": "^2.1.1",
     "redis": "^4.6.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3",
     "uuid": "^9.0.0",
     "validator": "^13.9.0",
     "winston": "^3.9.0"
