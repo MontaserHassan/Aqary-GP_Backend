@@ -22,7 +22,7 @@ const express = require("express"),
         },
       ],
     },
-    apis: ["./routes/*.js"],
+    apis: ["./routes/*.js", "../routes/*.js"],
   };
   
   const specs = swaggerJsdoc(options);
