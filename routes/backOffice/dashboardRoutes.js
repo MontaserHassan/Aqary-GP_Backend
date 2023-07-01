@@ -26,7 +26,7 @@ const router = express.Router();
  *                 transactions:
  *                   type: integer
  *                   description: Number of transactions in the application
- *  * /dashboard/main-graph:
+ * /dashboard/main-graph:
  *   get:
  *     summary: Get count of properties for each city for the application
 
