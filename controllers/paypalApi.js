@@ -3,7 +3,8 @@ const axios = require("axios");
 const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
 
-async function createOrder() {
+async function createOrder(payerId, amount, currency_code, description) {
+  console.log("Creating order");
   const accessToken = await generateAccessToken();
   const url = `${base}/v2/checkout/orders`;
   const response = await axios.post(url, {
@@ -11,8 +12,8 @@ async function createOrder() {
     purchase_units: [
       {
         amount: {
-          currency_code: "USD",
-          value: "100.00",
+          currency_code: currency_code,
+          value: amount,
         },
       },
     ],
@@ -36,6 +37,7 @@ async function capturePayment(orderId) {
     },
   });
 
+  console.log(response.data);
   return handleResponse(response);
 }
 
