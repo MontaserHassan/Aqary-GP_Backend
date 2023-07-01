@@ -7,29 +7,7 @@ const backOffice = require('./backOffice/backOffice');
 const customer = require('./customer/customer');
 
 const router = express.Router();
-/**
- * @swagger
- * /admin/statistics:
- *   get:
- *     summary: Get statistics for the application
- *     responses:
- *       200:
- *         description: Returns the statistics for the application
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 users:
- *                   type: integer
- *                   description: Number of registered users
- *                 properties:
- *                   type: integer
- *                   description: Number of properties in the application
- *                 transactions:
- *                   type: integer
- *                   description: Number of transactions in the application
- */
+
 router.use('/backOffice', backOffice);
 router.use('/', customer);
 // router.all('*', handleNotFound);
