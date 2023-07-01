@@ -38,9 +38,9 @@ const getProfitAndPercentageDifference = async () => {
 }
 
 const getCountPropertiesForEachCity = async (req, res) => {
-  if(!cache.get('countOfProperties')){
+  if(!cache.get('getCountPropertiesForEachCity')){
     try {
-      const countOfProperties = await Property.aggregate([
+      const countPropertiesForEachCity = await Property.aggregate([
         {
           $group: {
             _id: "$city",
@@ -56,14 +56,14 @@ const getCountPropertiesForEachCity = async (req, res) => {
         },
         { $limit: 5 }
       ]);
-      cache.set('countOfProperties', countOfProperties);
-      res.json(countOfProperties);
+      cache.set('countPropertiesForEachCity', countPropertiesForEachCity);
+      res.json({countPropertiesForEachCity});
     } catch (err) {
       logger.error(err.message);
       throw new Error('Server error: ' + err.message);
     };
   }else{
-
+    res.json({countPropertiesForEachCity: cache.get('getCountPropertiesForEachCity')});
   }
 
 };
