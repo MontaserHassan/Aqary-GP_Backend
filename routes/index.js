@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use('/backOffice', backOffice);
 router.use('/', customer);
-router.all('*', handleNotFound);
+// router.all('*', handleNotFound);
 // router.all('*', (req, res, next) => {
 //     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 // });
