@@ -11,8 +11,6 @@ const { propertyFileParser } = require('../../middlewares/fileParser.js');
 const router = express.Router();
 
 
-// middleware for authenticate current user
-
 router.use(propertyFileParser);
 router.post("/", validation(propertyValidator.createProperty), propertyController.createProperty);
 router.patch("/:id", validation(propertyValidator.updateProperty), propertyController.editProperty);

@@ -13,8 +13,7 @@ const router = express.Router();
 
 // middleware for check is admin or not
 
-// all admin routes
-router.use('/property', propertyRoutes); // ---> route to property
+router.use('/properties', propertyRoutes);
 router.use('/dashboard', dashboardRoutes);
 
 
