@@ -7,6 +7,7 @@ const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
 const havePermission = require('../../middlewares/havePermission');
 const roleName = require('../../middlewares/roleName');
+
 // const authRoute = require('./authRoute');
 const router = express.Router();
 
