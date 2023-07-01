@@ -11,11 +11,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please tell us your last name!']
     },
-    roleId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Role',
-        default: 3
-    },
+    // roleId: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Role',
+    //     default: 3
+    // },
     email: {
         type: String,
         required: [true, 'Please provide your email'],
@@ -62,7 +62,7 @@ userSchema.methods.correctPassword = async function(candidatePassword, userPassw
     return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-userSchema.method.changedPasswordAfter = function(JWTTimeStamp) {
+userSchema.methods.changedPasswordAfter = function(JWTTimeStamp) {
     if(this.passwordChangedAt) {
         const changedTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
         return JWTTimeStamp < changedTimeStamp;

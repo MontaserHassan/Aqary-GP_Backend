@@ -48,6 +48,7 @@ exports.login = asyncFunction(async (req, res, next) => {
         // return next(new AppError('Incorrect email or password', 401));
         throw { status: 401, message: 'Incorrect email or password' };
     }
+    // console.log(user);
 
     //3) If everthing ok, send token to client
     const token = signToken( user._id );
@@ -87,5 +88,6 @@ exports.protect = asyncFunction(async (req, res, next) => {
 
     //Grant access to protected route
     req.user = currentUser;
+    // console.log(req.user);
     next();
-});
+}); 
