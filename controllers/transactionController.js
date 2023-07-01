@@ -120,7 +120,7 @@ const deleteTransactionById = async (req, res) => {
 
 const getAllTransactions = async (req, res) => {
   try {
-    const transactions = await Transaction.find();
+    const transactions = await Transaction.find().populate('userId');
     res.json(transactions);
   } catch (error) {
     console.error('Error retrieving transactions:', error);
