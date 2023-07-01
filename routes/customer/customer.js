@@ -12,20 +12,19 @@ const roleName = require('../../middlewares/roleName');
 // const authRoute = require('./authRoute');
 const router = express.Router();
 
-// all customer routes
-// for everyone
-router.use('/api/v1/users', authRoutes); // ---> route to property
-router.use('/property', propertyRoutes); // ---> route to property
-router.use('/transaction', transactionRoutes); // ---> route to
-// middleware for check current user
 
+router.use('/api/v1/users', authRoutes);
+router.use('/property', propertyRoutes);
+router.use('/transaction', transactionRoutes);
 
-// authenticated routes
-router.use('/auth/property', userRoutes); // ---> route to property
-router.use('/checkout', checkoutRoutes); // --
+// middleware for check current user ---> omarHesham
+
+router.use('/auth/property', userRoutes);
+router.use('/checkout', checkoutRoutes);
 
 //Get all users
-router.use('/api/v1/users', userController.getAllUsers)
+// router.use('/api/v1/users', userController.getAllUsers)
+
 
 
 module.exports = router;
