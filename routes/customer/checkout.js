@@ -11,7 +11,6 @@ router.post('/webhook', paypalHook);
 router.get('/check/:id', checkTransactionIfCompleted);
 router.post("/create-paypal-order", async (req, res) => {
   try {
-    console.log(req.body)
     const payerId = req.body.userId;
     const { sku, amount } = req.body.cart[0];
 
@@ -24,6 +23,7 @@ router.post("/create-paypal-order", async (req, res) => {
 
 router.post("/capture-paypal-order", async (req, res) => {
   const { orderID } = req.body;
+  console.log(req.body)
   try {
     const captureData = await paypalApi.capturePayment(orderID);
     res.json(captureData);
