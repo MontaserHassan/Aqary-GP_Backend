@@ -1,10 +1,10 @@
 /* eslint-disable no-multiple-empty-lines */
 const express = require('express');
-const userController = require('./../../controllers/userController');
 const authRoutes = require('./authRoute');
 const propertyRoutes = require('./propertyRoutes');
 const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
+<<<<<<< HEAD
 const transactionRoutes = require('./TransactionRoutes')
 const cityRoutes = require('./cityRoute')
 const havePermission = require('../../middlewares/havePermission');
@@ -20,14 +20,23 @@ router.use('/city', cityRoutes); // ---> route to property
 
 router.use('/transaction', transactionRoutes); // ---> route to
 // middleware for check current user
+=======
+const transactionRoutes = require('./TransactionRoutes');
+const authController = require('./../../controllers/authController');
 
 
-// authenticated routes
-router.use('/auth/property', userRoutes); // ---> route to property
-router.use('/checkout', checkoutRoutes); // --
+const router = express.Router();
 
-//Get all users
-router.use('/api/v1/users', userController.getAllUsers)
+>>>>>>> a5631318c4014db333765f3b31d0b2894c60a38f
+
+router.use('/auth', authRoutes);
+router.use('/property', propertyRoutes);
+router.use('/transaction', transactionRoutes);
+
+router.use(authController.protect);
+router.use('/auth/property', userRoutes);
+router.use('/checkout', checkoutRoutes);
+
 
 
 module.exports = router;

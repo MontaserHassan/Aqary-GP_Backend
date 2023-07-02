@@ -5,6 +5,7 @@
 const express = require("express");
 const propertyRoutes = require("./propertyRoutes");
 const dashboardRoutes = require("./dashboardRoutes");
+const roleName = require('../../middlewares/roleName');
 
 
 
@@ -13,9 +14,8 @@ const router = express.Router();
 
 // middleware for check is admin or not
 
-// all admin routes
-router.use('/property', propertyRoutes); // ---> route to property
-router.use('/dashboard', dashboardRoutes);
+router.use('/properties', roleName('Admin'), propertyRoutes);
+router.use('/dashboard', roleName('Admin'), dashboardRoutes);
 
 
 

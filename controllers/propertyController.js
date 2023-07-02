@@ -26,7 +26,7 @@ require('../boot/propertyBooting');
 // };
 
 const calculateEndTime = (duration) => {
-  const millisecondsInDay = 1 * 60 * 60 * 1000; // Assuming a day is one hour
+  const millisecondsInDay = 1 * 60 * 60 * 1000; // one hour
   const currentTime = new Date();
   let durationInMilliseconds;
   if (duration === 'hour') {
@@ -50,14 +50,15 @@ const calculateEndTime = (duration) => {
 
 const createProperty = asyncFunction(async (req, res) => {
   if (!req.files || req.files.length === 0) throw { status: 400, message: 'no images uploaded' };
-  console.log(req.files);
   const photos = await Promise.all(
     req.files.map(async (file) => {
       const photo = await createUrlProperty(`${file.destination}/${file.filename}`);
       return photo;
     })
   );
+  if (!req.user) throw { status: 401, message: "doesn't create property without logged in user" };
   const property = new Property({
+    user: req.user,
     address: req.body.address,
     city: req.body.city,
     title: req.body.title,
@@ -73,7 +74,8 @@ const createProperty = asyncFunction(async (req, res) => {
     subscribe: req.body.subscribe,
     endTime: calculateEndTime(req.body.subscribe),
   });
-  console.log(property);
+  console.log(property.user);
+  if (!property) throw { status: 400, message: 'Bad Request' };
   property.save()
     .then(() => res.status(200).send(property))
     .catch((error) => res.json(error));
@@ -84,7 +86,7 @@ const createProperty = asyncFunction(async (req, res) => {
 
 
 const getAllProperties = asyncFunction(async (req, res) => {
-  const pageSize = 8;
+  const pageSize = 9;
   let page = req.query.page || 1;
   let skip = (page - 1) * pageSize;
   const totalProperties = await Property.countDocuments();
@@ -101,7 +103,7 @@ const getAllProperties = asyncFunction(async (req, res) => {
 
 
 const getProperty = asyncFunction(async (req, res) => {
-  const property = await Property.findById({ _id: req.params.id });
+  const property = await Property.findById(req.params.id).populate({ path: 'user' }).exec();
   if (!property) throw { status: 404, message: 'No Properties Found' };
   res.status(200).send(property);
 });
@@ -164,12 +166,10 @@ const deleteProperty = asyncFunction(async (req, res) => {
 
 
 const searchOnProperty = asyncFunction(async (req, res) => {
-  const property = await Property.find({ city: { $regex: new RegExp( req.params.city, 'i' ) } });
-  // console.log(property.length)
+  const property = await Property.find({ city: { $regex: new RegExp(req.params.city, 'i') } });
   if (!property) {
     throw { status: 404, message: 'Property not found' };
   }
-  // console.log(property);
   res.status(200).send(property);
 });
 
