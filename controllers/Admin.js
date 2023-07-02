@@ -127,7 +127,7 @@ const getPropertyTable = async (req, res) => {
   let pgSize;
   if (![10, 25, 50].includes(pageSize)) pgSize = 10;
   else pgSize = pageSize;
-  const skip = (page - 1) + pgSize;
+  const skip = (page - 1) * pgSize;
 
   const filter = {};
   if (address) filter.address = { $regex: new RegExp(address, 'i') };
