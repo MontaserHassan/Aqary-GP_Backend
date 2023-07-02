@@ -113,7 +113,7 @@ const statistics = async (req, res) => {
 const getPropertyTable = async (req, res) => {
   const {
     page = 1,
-    pageSize = DEFAULT_PAGE_SIZE,
+    pageSize = 10,
     address,
     city,
     title,
@@ -121,8 +121,13 @@ const getPropertyTable = async (req, res) => {
     minPrice,
     maxPrice,
   } = req.query;
+  
 
-  const skip = (page - 1) * pageSize;
+
+  let pgSize;
+  if (![10, 25, 50].includes(pageSize)) pgSize = 10;
+  else pgSize = pageSize;
+  const skip = (page - 1) + pgSize;
 
   const filter = {};
   if (address) filter.address = { $regex: new RegExp(address, 'i') };
@@ -138,7 +143,7 @@ const getPropertyTable = async (req, res) => {
   try {
     const query = Property.find(filter)
       .skip(skip)
-      .limit(parseInt(pageSize));
+      .limit(parseInt(pgSize));
     const countQuery = Property.countDocuments(filter);
     const [properties, count] = await Promise.all([query, countQuery]);
 
