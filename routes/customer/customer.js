@@ -25,7 +25,7 @@ router.use('/auth', authRoutes);
 router.use('/property', propertyRoutes);
 router.use('/transaction', transactionRoutes);
 
-router.use(authController.protect);
+// router.use(authController.protect);
 router.use('/auth/property', userRoutes);
 router.use('/checkout', checkoutRoutes);
 

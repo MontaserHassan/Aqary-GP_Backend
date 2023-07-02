@@ -56,7 +56,7 @@ const createProperty = asyncFunction(async (req, res) => {
       return photo;
     })
   );
-  if (!req.user) throw { status: 401, message: "doesn't create property without logged in user" };
+  // if (!req.user) throw { status: 401, message: "doesn't create property without logged in user" };
   const property = new Property({
     user: req.user,
     address: req.body.address,
