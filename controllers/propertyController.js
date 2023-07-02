@@ -86,7 +86,7 @@ const createProperty = asyncFunction(async (req, res) => {
 
 
 const getAllProperties = asyncFunction(async (req, res) => {
-  const pageSize = 8;
+  const pageSize = 9;
   let page = req.query.page || 1;
   let skip = (page - 1) * pageSize;
   const totalProperties = await Property.countDocuments();
