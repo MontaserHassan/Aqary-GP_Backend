@@ -10,14 +10,14 @@
 /* eslint-disable no-multiple-empty-lines */
 const mongoose = require('mongoose');
 
-
 const { Schema } = mongoose;
+
 
 const propertySchema = new Schema(
   {
-    userId: {
+    user: {
       type: mongoose.Types.ObjectId,
-      ref: 'users',
+      ref: 'User',
     },
     address: {
       type: String,
