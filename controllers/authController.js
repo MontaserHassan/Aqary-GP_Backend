@@ -11,26 +11,44 @@ const signToken = id => {
 }
 
 exports.signup = asyncFunction(async (req, res, next) => {
-    const newUser = await User.create({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm
-    });
+    try{
 
-    newUser.password = undefined;
-    newUser.__v = undefined;
+        const newUser = await User.create({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: req.body.password,
+            passwordConfirm: req.body.passwordConfirm
+        });
+    
+        newUser.password = undefined;
+        newUser.__v = undefined;
+    
+        const token = signToken(newUser._id);
+    
+        res.status(201).json({
+            status: 'success',
+            token,
+            data: {
+                user: newUser
+            }
+        });
 
-    const token = signToken(newUser._id);
-
-    res.status(201).json({
-        status: 'success',
-        token,
-        data: {
-            user: newUser
+    }catch (err) {
+        if (err.code === 11000){
+            const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+            const message = `Duplicate field value: ${value}. Please use another value!`;
+            throw { status: 400, message: message};
         }
-    });
+        
+        if (err.name === 'ValidationError'){
+            const errors = Object.values(err.errors).map(el => el.message);
+            console.log(errors);
+            const message = `${errors.join('. ')}`;
+            throw { status: 400, message: message};
+        } 
+            
+    }
 
 });
 
