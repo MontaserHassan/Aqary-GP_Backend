@@ -7,6 +7,7 @@
 /* eslint-disable spaced-comment */
 const Property = require('../models/propertyModel');
 const { asyncFunction } = require('../middlewares/asyncHandler');
+const paypalApi = require('./paypalApi');
 const { createUrlProperty, deleteUrlPhoto } = require('../middlewares/fileParser');
 require('../boot/propertyBooting');
 
@@ -26,7 +27,7 @@ require('../boot/propertyBooting');
 // };
 
 const calculateEndTime = (duration) => {
-  const millisecondsInDay = 1 * 60 * 60 * 1000; // Assuming a day is one hour
+  const millisecondsInDay = 1 * 60 * 60 * 1000; // one hour
   const currentTime = new Date();
   let durationInMilliseconds;
   if (duration === 'hour') {
@@ -46,18 +47,84 @@ const calculateEndTime = (duration) => {
 
 
 //////////////////////////////////// create property //////////////////////////////////////
+const createPropertyFunction = asyncFunction(async (data, amount, userId, files) => {
+  const valueOfAdd = {
+    PROPERTY_HOUR: {
+      value: 1.0, time: 'hour',
+    },
+    PROPERTY_DAY: {
+      value: 2.0, time: 'day',
+    },
+    PROPERTY_WEEK: {
+      value: 5.0, time: 'week'
+  },
+    PROPERTY_MONTH: {
+      value: 10.0, time: 'month'
+    },
+  }
+  if (!files || files.length === 0) throw { status: 400, message: 'no images uploaded' };
+  if (data.description && Number.parseFloat(amount) === Number.parseFloat(valueOfAdd[data.subscribe].value)) throw { status: 400, message: 'you have an error in amount' };
+  const photos = await Promise.all(
+    files.map(async (file) => {
+      const photo = await createUrlProperty(`${file.destination}/${file.filename}`);
+      return photo;
+    })
+  );
+  // if (!req.user) throw { status: 401, message: "doesn't create property without logged in user" };
+  const property = new Property({
+    user: userId,
+    address: data.address,
+    city: data.city,
+    title: data.title,
+    level: data.level,
+    rooms: data.rooms,
+    baths: data.baths,
+    area: data.area,
+    description: data.description,
+    price: data.price,
+    contractPhone: data.contractPhone,
+    photo: photos,
+    paymentOption: data.paymentOption,
+    subscribe: data.subscribe,
+    endTime: calculateEndTime(data.subscribe),
+  });
+  if (!property) throw { status: 400, message: 'Bad Request' };
+  return property.save()
+    .then(() => true)
+    .catch((error) => {
+      throw { status: 400, message: error.message };
+    });
+});
 
-
+const valueOfAdd = {
+  PROPERTY_HOUR: {
+    value: 1.0, time: 'hour',
+  },
+  PROPERTY_DAY: {
+    value: 2.0, time: 'day',
+  },
+  PROPERTY_WEEK: {
+    value: 5.0, time: 'week'
+},
+  PROPERTY_MONTH: {
+    value: 10.0, time: 'month'
+  },
+}
 const createProperty = asyncFunction(async (req, res) => {
   if (!req.files || req.files.length === 0) throw { status: 400, message: 'no images uploaded' };
-  console.log(req.files);
+  if (req.body.description && Number.parseFloat(req.body.amount) !== Number.parseFloat(valueOfAdd[req.body.subscribe].value)) throw { status: 400, message: 'you have an error in amount' };
   const photos = await Promise.all(
     req.files.map(async (file) => {
       const photo = await createUrlProperty(`${file.destination}/${file.filename}`);
       return photo;
     })
   );
-  const property = new Property({
+  try {
+    await paypalApi.capturePayment(req.body.orderID);
+
+  // if (!req.user) throw { status: 401, message: "doesn't create property without logged in user" };
+  const property = await Property.create({
+    user: req?.user?._id || '649db4ae75fc1c6db6d97554',
     address: req.body.address,
     city: req.body.city,
     title: req.body.title,
@@ -70,13 +137,14 @@ const createProperty = asyncFunction(async (req, res) => {
     contractPhone: req.body.contractPhone,
     photo: photos,
     paymentOption: req.body.paymentOption,
-    subscribe: req.body.subscribe,
-    endTime: calculateEndTime(req.body.subscribe),
+    subscribe: valueOfAdd[req.body.subscribe].time,
+    endTime: calculateEndTime(valueOfAdd[req.body.subscribe].time),
   });
-  console.log(property);
-  property.save()
-    .then(() => res.status(200).send(property))
-    .catch((error) => res.json(error));
+  if (!property) throw { status: 400, message: 'Bad Request' };
+    res.status(200).json(property)
+  } catch (err) {
+    throw { status: 400, message: err.message };
+  }
 });
 
 
@@ -84,7 +152,7 @@ const createProperty = asyncFunction(async (req, res) => {
 
 
 const getAllProperties = asyncFunction(async (req, res) => {
-  const pageSize = 8;
+  const pageSize = 9;
   let page = req.query.page || 1;
   let skip = (page - 1) * pageSize;
   const totalProperties = await Property.countDocuments();
@@ -101,7 +169,7 @@ const getAllProperties = asyncFunction(async (req, res) => {
 
 
 const getProperty = asyncFunction(async (req, res) => {
-  const property = await Property.findById({ _id: req.params.id });
+  const property = await Property.findById(req.params.id).populate({ path: 'user' }).exec();
   if (!property) throw { status: 404, message: 'No Properties Found' };
   res.status(200).send(property);
 });
@@ -164,12 +232,10 @@ const deleteProperty = asyncFunction(async (req, res) => {
 
 
 const searchOnProperty = asyncFunction(async (req, res) => {
-  const property = await Property.find({ city: { $regex: new RegExp( req.params.city, 'i' ) } });
-  // console.log(property.length)
+  const property = await Property.find({ city: { $regex: new RegExp(req.params.city, 'i') } });
   if (!property) {
     throw { status: 404, message: 'Property not found' };
   }
-  // console.log(property);
   res.status(200).send(property);
 });
 
@@ -183,4 +249,5 @@ module.exports = {
   editProperty,
   deleteProperty,
   searchOnProperty,
+  createPropertyFunction
 };

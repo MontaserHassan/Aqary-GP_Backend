@@ -110,4 +110,57 @@ const statistics = async (req, res) => {
   }
 };
 
-module.exports = {statistics, getCountPropertiesForEachCity};
+const getPropertyTable = async (req, res) => {
+  const {
+    page = 1,
+    pageSize = 10,
+    address,
+    city,
+    title,
+    subscribe,
+    minPrice,
+    maxPrice,
+  } = req.query;
+  
+
+
+  let pgSize;
+  if (![10, 25, 50].includes(pageSize)) pgSize = 10;
+  else pgSize = pageSize;
+  const skip = (page - 1) * pgSize;
+
+  const filter = {};
+  if (address) filter.address = { $regex: new RegExp(address, 'i') };
+  if (city) filter.city = { $regex: new RegExp(city, 'i') };
+  if (title) filter.title = { $regex: new RegExp(title, 'i') };
+  if (subscribe) filter.subscribe = subscribe;
+  if (minPrice || maxPrice) {
+    filter.price = {};
+    if (minPrice) filter.price.$gte = parseInt(minPrice);
+    if (maxPrice) filter.price.$lte = parseInt(maxPrice);
+  }
+
+  try {
+    const query = Property.find(filter)
+      .skip(skip)
+      .limit(parseInt(pgSize))
+      .populate('user');
+    const countQuery = Property.countDocuments(filter);
+    const [properties, count] = await Promise.all([query, countQuery]);
+
+    res.json({
+      data: properties,
+      pagination: {
+        page: parseInt(page),
+        pageSize: parseInt(pageSize),
+        total: count,
+        totalPages: Math.ceil(count / pageSize)
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+};
+
+module.exports = {statistics, getCountPropertiesForEachCity, getPropertyTable};

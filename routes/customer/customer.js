@@ -1,29 +1,35 @@
 /* eslint-disable no-multiple-empty-lines */
 const express = require('express');
-const userController = require('./../../controllers/userController');
 const authRoutes = require('./authRoute');
 const propertyRoutes = require('./propertyRoutes');
 const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
 const transactionRoutes = require('./TransactionRoutes')
+const cityRoutes = require('./cityRoute')
 const havePermission = require('../../middlewares/havePermission');
 const roleName = require('../../middlewares/roleName');
-
+const authController = require('./../../controllers/authController');
 // const authRoute = require('./authRoute');
 const router = express.Router();
 
+// all customer routes
+// for everyone
+router.use('/api/v1/users', authRoutes); // ---> route to property
+router.use('/property', propertyRoutes); // ---> route to property
+router.use('/city', cityRoutes); // ---> route to property
 
-router.use('/api/v1/users', authRoutes);
+router.use('/transaction', transactionRoutes); // ---> route to
+// middleware for check current user
+
+
+
+router.use('/auth', authRoutes);
 router.use('/property', propertyRoutes);
 router.use('/transaction', transactionRoutes);
 
-// middleware for check current user ---> omarHesham
-
+// router.use(authController.protect);
 router.use('/auth/property', userRoutes);
 router.use('/checkout', checkoutRoutes);
-
-//Get all users
-// router.use('/api/v1/users', userController.getAllUsers)
 
 
 
