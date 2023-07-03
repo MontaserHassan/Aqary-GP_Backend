@@ -10,7 +10,7 @@ const { asyncFunction } = require('../middlewares/asyncHandler');
 const paypalApi = require('./paypalApi');
 const { createUrlProperty, deleteUrlPhoto } = require('../middlewares/fileParser');
 require('../boot/propertyBooting');
-
+const { payForPropertyPost } = require('./transactionController');
 
 
 //////////////////////////////////// handle endTime ///////////////////////////////////////
@@ -47,54 +47,54 @@ const calculateEndTime = (duration) => {
 
 
 //////////////////////////////////// create property //////////////////////////////////////
-const createPropertyFunction = asyncFunction(async (data, amount, userId, files) => {
-  const valueOfAdd = {
-    PROPERTY_HOUR: {
-      value: 1.0, time: 'hour',
-    },
-    PROPERTY_DAY: {
-      value: 2.0, time: 'day',
-    },
-    PROPERTY_WEEK: {
-      value: 5.0, time: 'week'
-  },
-    PROPERTY_MONTH: {
-      value: 10.0, time: 'month'
-    },
-  }
-  if (!files || files.length === 0) throw { status: 400, message: 'no images uploaded' };
-  if (data.description && Number.parseFloat(amount) === Number.parseFloat(valueOfAdd[data.subscribe].value)) throw { status: 400, message: 'you have an error in amount' };
-  const photos = await Promise.all(
-    files.map(async (file) => {
-      const photo = await createUrlProperty(`${file.destination}/${file.filename}`);
-      return photo;
-    })
-  );
-  // if (!req.user) throw { status: 401, message: "doesn't create property without logged in user" };
-  const property = new Property({
-    user: userId,
-    address: data.address,
-    city: data.city,
-    title: data.title,
-    level: data.level,
-    rooms: data.rooms,
-    baths: data.baths,
-    area: data.area,
-    description: data.description,
-    price: data.price,
-    contractPhone: data.contractPhone,
-    photo: photos,
-    paymentOption: data.paymentOption,
-    subscribe: data.subscribe,
-    endTime: calculateEndTime(data.subscribe),
-  });
-  if (!property) throw { status: 400, message: 'Bad Request' };
-  return property.save()
-    .then(() => true)
-    .catch((error) => {
-      throw { status: 400, message: error.message };
-    });
-});
+// const createPropertyFunction = asyncFunction(async (data, amount, userId, files) => {
+//   const valueOfAdd = {
+//     PROPERTY_HOUR: {
+//       value: 1.0, time: 'hour',
+//     },
+//     PROPERTY_DAY: {
+//       value: 2.0, time: 'day',
+//     },
+//     PROPERTY_WEEK: {
+//       value: 5.0, time: 'week'
+//     },
+//     PROPERTY_MONTH: {
+//       value: 10.0, time: 'month'
+//     },
+//   }
+//   if (!files || files.length === 0) throw { status: 400, message: 'no images uploaded' };
+//   if (data.description && Number.parseFloat(amount) === Number.parseFloat(valueOfAdd[data.subscribe].value)) throw { status: 400, message: 'you have an error in amount' };
+//   const photos = await Promise.all(
+//     files.map(async (file) => {
+//       const photo = await createUrlProperty(`${file.destination}/${file.filename}`);
+//       return photo;
+//     })
+//   );
+//   // if (!req.user) throw { status: 401, message: "doesn't create property without logged in user" };
+//   const property = new Property({
+//     user: userId,
+//     address: data.address,
+//     city: data.city,
+//     title: data.title,
+//     level: data.level,
+//     rooms: data.rooms,
+//     baths: data.baths,
+//     area: data.area,
+//     description: data.description,
+//     price: data.price,
+//     contractPhone: data.contractPhone,
+//     photo: photos,
+//     paymentOption: data.paymentOption,
+//     subscribe: data.subscribe,
+//     endTime: calculateEndTime(data.subscribe),
+//   });
+//   if (!property) throw { status: 400, message: 'Bad Request' };
+//   return property.save()
+//     .then(() => true)
+//     .catch((error) => {
+//       throw { status: 400, message: error.message };
+//     });
+// });
 
 const valueOfAdd = {
   PROPERTY_HOUR: {
@@ -105,7 +105,7 @@ const valueOfAdd = {
   },
   PROPERTY_WEEK: {
     value: 5.0, time: 'week'
-},
+  },
   PROPERTY_MONTH: {
     value: 10.0, time: 'month'
   },
@@ -120,27 +120,44 @@ const createProperty = asyncFunction(async (req, res) => {
     })
   );
   try {
-    await paypalApi.capturePayment(req.body.orderID);
+    const pay = await paypalApi.capturePayment(req.body.orderID);
+    console.log(pay);
+    // if (!req.user) throw { status: 401, message: "doesn't create property without logged in user" };
+    const property = await Property.create({
+      user: req?.user?._id || '649db4ae75fc1c6db6d97554',
+      address: req.body.address,
+      city: req.body.city,
+      title: req.body.title,
+      level: req.body.level,
+      rooms: req.body.rooms,
+      baths: req.body.baths,
+      area: req.body.area,
+      description: req.body.description,
+      price: req.body.price,
+      contractPhone: req.body.contractPhone,
+      photo: photos,
+      paymentOption: req.body.paymentOption,
+      subscribe: valueOfAdd[req.body.subscribe].time,
+      endTime: calculateEndTime(valueOfAdd[req.body.subscribe].time),
+    });
+    console.log(property);
+    if (!property) throw { status: 400, message: 'Bad Request' };
+    if (pay) {
+      try {
+        const userId = req?.user?._id || '649db4ae75fc1c6db6d97554';
+        const propertyId = property._id;
+        const amount = req.body.amount;
+        const payment = req.body.paymentOption;
+        const duration = valueOfAdd[req.body.subscribe].time;
 
-  // if (!req.user) throw { status: 401, message: "doesn't create property without logged in user" };
-  const property = await Property.create({
-    user: req?.user?._id || '649db4ae75fc1c6db6d97554',
-    address: req.body.address,
-    city: req.body.city,
-    title: req.body.title,
-    level: req.body.level,
-    rooms: req.body.rooms,
-    baths: req.body.baths,
-    area: req.body.area,
-    description: req.body.description,
-    price: req.body.price,
-    contractPhone: req.body.contractPhone,
-    photo: photos,
-    paymentOption: req.body.paymentOption,
-    subscribe: valueOfAdd[req.body.subscribe].time,
-    endTime: calculateEndTime(valueOfAdd[req.body.subscribe].time),
-  });
-  if (!property) throw { status: 400, message: 'Bad Request' };
+        await payForPropertyPost(userId, propertyId, amount, payment, duration);
+      } catch (err) {
+        console.log(err);
+        throw { status: 500, message: 'Error processing transaction' };
+      }
+    }
+
+
     res.status(200).json(property)
   } catch (err) {
     throw { status: 400, message: err.message };
@@ -249,5 +266,5 @@ module.exports = {
   editProperty,
   deleteProperty,
   searchOnProperty,
-  createPropertyFunction
+
 };
