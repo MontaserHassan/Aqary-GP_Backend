@@ -16,6 +16,24 @@ const userSchema = new mongoose.Schema({
         ref: 'Role',
         default: '649dd04c59fa040061014392'
     },
+    phoneNumber: {
+        type: String,
+        required: [true, 'Please provide your phone number'],
+        unique: true,
+        
+    },
+    birthdate: {
+        type: Date,
+        required: [true, 'Please tell us your birth date'],
+        validate: {
+          validator: function(value) {
+            const currentDate = new Date();
+            const minBirthdate = new Date(currentDate.setFullYear(currentDate.getFullYear() - 16));
+            return value <= minBirthdate;
+          },
+          message: 'You must be at least 16 years old to register'
+        }
+    },
     email: {
         type: String,
         required: [true, 'Please provide your email'],

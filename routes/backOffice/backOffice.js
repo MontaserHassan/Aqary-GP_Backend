@@ -11,9 +11,6 @@ const authController = require('./../../controllers/authController');
 
 const router = express.Router();
 
-router.use(() => {
-    console.log('hello');
-})
 router.use(authController.protect);
 router.use('/properties', roleName('Admin'), propertyRoutes);
 router.use('/dashboard', roleName('Admin'), dashboardRoutes);
