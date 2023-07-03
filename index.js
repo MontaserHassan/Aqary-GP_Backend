@@ -8,7 +8,6 @@ const { limiter } = require('./config/security.js');
 require('./config/database.js');
 const bodyParser = require('body-parser');
 const { specs, swaggerUi } = require('./config/swagger.js');
-const authController = require('./controllers/authController');
 const app = express();
 
 
@@ -38,11 +37,7 @@ app.use(helmet.hidePoweredBy('aqary tech.'));
 // routes
 app.use(require('./routes'));
 
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(specs, { explorer: true })
-);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
 
 
 module.exports = app;
