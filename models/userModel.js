@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     roleId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
-        default: 3
+        default: '649dd04c59fa040061014392'
     },
     email: {
         type: String,
