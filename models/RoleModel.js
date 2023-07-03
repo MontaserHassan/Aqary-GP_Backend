@@ -21,6 +21,7 @@ const roleSchema = new mongoose.Schema({
     minLength: 2,
   },
   actions: actionSchema,
+  rank: { type: Number, default: 0 },
 });
 
 const RoleModel = mongoose.model('Role', roleSchema);
