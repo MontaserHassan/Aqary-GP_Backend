@@ -147,20 +147,20 @@ const createProperty = asyncFunction(async (req, res) => {
     console.log('hello');
     console.log(property);
     if (!property) throw { status: 400, message: 'Bad Request' };
-    if (pay) {
-      try {
-        const userId = req?.user?._id || '649db4ae75fc1c6db6d97554';
-        const propertyId = property._id;
-        const amount = req.body.amount;
-        const payment = req.body.paymentOption;
-        const duration = valueOfAdd[req.body.subscribe].time;
 
-        const transaction = await payForPropertyPost(userId, propertyId, amount, payment, duration);
-      } catch (err) {
-        console.log(err);
-        throw { status: 500, message: 'Error processing transaction' };
-      }
+    try {
+      const userId = req?.user?._id || '649db4ae75fc1c6db6d97554';
+      const propertyId = property._id;
+      const amount = req.body.amount;
+      const payment = req.body.paymentOption;
+      const duration = valueOfAdd[req.body.subscribe].time;
+
+      const transaction = await payForPropertyPost(userId, propertyId, amount, payment, duration);
+    } catch (err) {
+      console.log(err);
+      throw { status: 500, message: 'Error processing transaction' };
     }
+
 
 
     res.status(200).json(property)
