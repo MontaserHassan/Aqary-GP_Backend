@@ -5,8 +5,7 @@ const { asyncFunction } = require('../middlewares/asyncHandler');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
     const users = await User.find();
-  
-    // SEND RESPONSE
+
     res.status(200).json({
       status: 'success',
       results: users.length,
@@ -16,4 +15,8 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     });
   });
 
-  exports.updateUser = asyncFunction 
+  exports.updateUser = asyncFunction(async (req, res, next) => {
+    //1) Create error if user posts password data
+      if(req.body.password || req.body.passwordConfirm) throw{ status: 400, message: 'This route is not for password update!'};
+    //2) Update user document
+  }) 
