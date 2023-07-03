@@ -10,7 +10,7 @@ const signToken = id => {
     });
 }
 
-exports.signup = catchAsync(async (req, res, next) => {
+exports.signup = asyncFunction(async (req, res, next) => {
     const newUser = await User.create({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -18,6 +18,9 @@ exports.signup = catchAsync(async (req, res, next) => {
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm
     });
+
+    newUser.password = undefined;
+    newUser.__v = undefined;
 
     const token = signToken(newUser._id);
 
@@ -55,6 +58,10 @@ exports.login = asyncFunction(async (req, res, next) => {
         status: 'success',
         token,
         user: {
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            roleId: user.roleId || null,
             email: user.email
         }
     })
@@ -92,4 +99,26 @@ exports.protect = asyncFunction(async (req, res, next) => {
     //Grant access to protected route
     req.user = currentUser;
     next();
+}); 
+
+exports.userInfo = asyncFunction(async (req, res, next) => {
+    const userId = req.user._id;
+
+     // Find the user data associated with the provided token
+     const user = await User.findById(userId);
+
+     // If user data is not found, send an error response
+     if (!user) {
+         throw { status: 404, message: 'User not found' };
+     }
+ 
+     // If user data is found, respond with it
+     res.json({
+         status: 'success',
+         data: {
+             user
+         }
+     });
+
+
 }); 
