@@ -32,8 +32,8 @@ app.use(helmet());
 app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy('aqary tech.'));
 
-// midldlewares
-app.use(authController.protect);
+// // midldlewares
+// app.use(authController.protect);
 
 // routes
 app.use(require('./routes'));
