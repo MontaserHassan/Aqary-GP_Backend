@@ -19,7 +19,9 @@ router.use('/property', propertyRoutes); // ---> route to property
 router.use('/city', cityRoutes); // ---> route to property
 
 // middleware for check current user
+
 router.use('/auth', authRoutes);
+router.use('/city', cityRoutes);
 router.use('/property', propertyRoutes);
 
 router.use(authController.protect);
