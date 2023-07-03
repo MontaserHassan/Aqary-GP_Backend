@@ -6,10 +6,7 @@ const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
 const transactionRoutes = require('./TransactionRoutes')
 const cityRoutes = require('./cityRoute')
-const havePermission = require('../../middlewares/havePermission');
-const roleName = require('../../middlewares/roleName');
 const authController = require('./../../controllers/authController');
-// const authRoute = require('./authRoute');
 const router = express.Router();
 
 // all customer routes
