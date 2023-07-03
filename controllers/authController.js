@@ -19,6 +19,9 @@ exports.signup = asyncFunction(async (req, res, next) => {
         passwordConfirm: req.body.passwordConfirm
     });
 
+    newUser.password = undefined;
+    newUser.__v = undefined;
+
     const token = signToken(newUser._id);
 
     res.status(201).json({
