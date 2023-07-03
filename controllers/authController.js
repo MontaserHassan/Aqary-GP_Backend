@@ -55,6 +55,10 @@ exports.login = asyncFunction(async (req, res, next) => {
         status: 'success',
         token,
         user: {
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            roleId: user.roleId || null,
             email: user.email
         }
     })
