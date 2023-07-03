@@ -14,6 +14,7 @@ const router = express.Router();
 
 
 router.use('/auth', authRoutes);
+router.use('/city', cityRoutes);
 router.use('/property', propertyRoutes);
 router.use('/transaction', transactionRoutes);
 
