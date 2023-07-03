@@ -97,3 +97,25 @@ exports.protect = asyncFunction(async (req, res, next) => {
     req.user = currentUser;
     next();
 }); 
+
+exports.userInfo = asyncFunction(async (req, res, next) => {
+    const userId = req.user._id;
+
+     // Find the user data associated with the provided token
+     const user = await User.findById(userId);
+
+     // If user data is not found, send an error response
+     if (!user) {
+         throw { status: 404, message: 'User not found' };
+     }
+ 
+     // If user data is found, respond with it
+     res.json({
+         status: 'success',
+         data: {
+             user
+         }
+     });
+
+
+}); 
