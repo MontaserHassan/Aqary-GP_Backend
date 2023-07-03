@@ -18,16 +18,12 @@ router.use('/api/v1/users', authRoutes); // ---> route to property
 router.use('/property', propertyRoutes); // ---> route to property
 router.use('/city', cityRoutes); // ---> route to property
 
-router.use('/transaction', transactionRoutes); // ---> route to
 // middleware for check current user
-
-
-
 router.use('/auth', authRoutes);
 router.use('/property', propertyRoutes);
-router.use('/transaction', transactionRoutes);
 
 router.use(authController.protect);
+router.use('/transaction', transactionRoutes);
 router.use('/auth/property', userRoutes);
 router.use('/checkout', checkoutRoutes);
 
