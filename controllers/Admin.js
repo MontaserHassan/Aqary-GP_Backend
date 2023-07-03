@@ -2,33 +2,36 @@ const logger = require('../config/logger');
 const TransactionModel = require('../models/TransactionModel');
 const Property = require('../models/propertyModel');
 const cache = require('../config/cache');
+const { default: mongoose } = require('mongoose');
 
 const getProfitAndPercentageDifference = async () => {
   if(!cache.get('thisMonthTotal')){
     const today = new Date();
-      const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0); // start of this month
-      const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1, 0, 0, 0, 0); // start of last month
-      const thisMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999); // end of this month
-  
-      const [thisMonth, lastMonth] = await Promise.all([
-        TransactionModel.aggregate([
-          { $match: { sender: false, createdAt: { $gte: thisMonthStart, $lte: thisMonthEnd } } },
-          { $group: { _id: null, total: { $sum: '$amount' } } }
-        ]),
-        TransactionModel.aggregate([
-          { $match: { sender: false, createdAt: { $gte: lastMonthStart, $lte: thisMonthStart } } },
-          { $group: { _id: null, total: { $sum: '$amount' } } }
-        ])
-      ]);
-  
-      const thisMonthTotal = thisMonth.length ? thisMonth[0].total : 0;
-      const lastMonthTotal = lastMonth.length ? lastMonth[0].total : 0;
-      const percentageDifference = ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
+    const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0); // start of this month
+    const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1, 0, 0, 0, 0); // start of last month
+    const thisMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999); // end of this month
+    
+    const [thisMonth, lastMonth] = await Promise.all([
+      TransactionModel.aggregate([
+        { $match: { createdAt: { $gte: thisMonthStart, $lte: thisMonthEnd } } },
+        { $group: { _id: null, total: { $sum: '$amount' } } }
+      ]),
+      TransactionModel.aggregate([
+        { $match: { createdAt: { $gte: lastMonthStart, $lte: thisMonthStart } } },
+        { $group: { _id: null, total: { $sum: '$amount' } } }
+      ])
+    ]);
 
-      cache.set('thisMonthTotal', thisMonthTotal);
-      cache.set('percentageDifference', percentageDifference);
 
-      return { thisMonthTotal, percentageDifference };
+
+    const thisMonthTotal = thisMonth.length ? thisMonth[0].total : 0;
+    const lastMonthTotal = lastMonth.length ? lastMonth[0].total : 0;
+    const percentageDifference = ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
+
+    cache.set('thisMonthTotal', thisMonthTotal);
+    cache.set('percentageDifference', percentageDifference);
+
+    return { thisMonthTotal, percentageDifference };
   }else{
     return {
       thisMonthTotal: cache.get('thisMonthTotal'),
@@ -88,7 +91,6 @@ const statistics = async (req, res) => {
 
     if (!totalProfits) {
       const profits = await TransactionModel.aggregate([
-        { $match: { sender: false } },
         { $group: { _id: null, total: { $sum: '$amount' } } }
       ]);
       totalProfits = profits.length > 0 ? profits[0].total : 0;
