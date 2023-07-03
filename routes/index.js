@@ -8,8 +8,8 @@ const customer = require('./customer/customer');
 const router = express.Router();
 
 
-router.use('/backOffice', backOffice);
 router.use('/', customer);
+router.use('/backOffice', backOffice);
 router.all('*', handleNotFound);
 router.use(errorHandler);
 
