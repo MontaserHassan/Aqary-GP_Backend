@@ -165,6 +165,7 @@ const createProperty = asyncFunction(async (req, res) => {
 
     res.status(200).json(property)
   } catch (err) {
+    console.log(err);
     throw { status: 400, message: err.message };
   }
 });
