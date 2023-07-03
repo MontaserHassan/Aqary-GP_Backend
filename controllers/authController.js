@@ -82,7 +82,7 @@ exports.protect = asyncFunction(async (req, res, next) => {
         if (err.name === 'TokenExpiredError') throw { status: 401, message: 'Your token has expired!. Please log in again!' };
     }
     //3) Check if user still exists
-    const currentUser = await User.findById(decoded.id);
+    const currentUser = await User.findById(decoded.id).populate('roleId');
     
     if (!currentUser) throw { status: 401, message: 'The user belonging to this token does not longer exist!' };
 
