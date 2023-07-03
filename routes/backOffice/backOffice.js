@@ -9,12 +9,11 @@ const roleName = require('../../middlewares/roleName');
 const authController = require('./../../controllers/authController');
 
 
-
-
 const router = express.Router();
 
-// middleware for check is admin or not
-
+router.use(() => {
+    console.log('hello');
+})
 router.use(authController.protect);
 router.use('/properties', roleName('Admin'), propertyRoutes);
 router.use('/dashboard', roleName('Admin'), dashboardRoutes);
