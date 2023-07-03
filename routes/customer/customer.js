@@ -6,10 +6,7 @@ const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
 const transactionRoutes = require('./TransactionRoutes')
 const cityRoutes = require('./cityRoute')
-const havePermission = require('../../middlewares/havePermission');
-const roleName = require('../../middlewares/roleName');
 const authController = require('./../../controllers/authController');
-// const authRoute = require('./authRoute');
 const router = express.Router();
 
 // all customer routes
@@ -18,14 +15,14 @@ router.use('/api/v1/users', authRoutes); // ---> route to property
 router.use('/property', propertyRoutes); // ---> route to property
 router.use('/city', cityRoutes); // ---> route to property
 
-router.use('/transaction', transactionRoutes); // ---> route to
 // middleware for check current user
 
 router.use('/auth', authRoutes);
+router.use('/city', cityRoutes);
 router.use('/property', propertyRoutes);
-router.use('/transaction', transactionRoutes);
 
-// router.use(authController.protect);
+router.use(authController.protect);
+router.use('/transaction', transactionRoutes);
 router.use('/auth/property', userRoutes);
 router.use('/checkout', checkoutRoutes);
 

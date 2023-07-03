@@ -1,21 +1,7 @@
-/* eslint-disable eol-last */
-/* eslint-disable consistent-return */
-/* eslint-disable no-else-return */
-/* eslint-disable eqeqeq */
-/* eslint-disable space-before-blocks */
-/* eslint-disable indent */
-/* eslint-disable prefer-const */
-/* eslint-disable no-console */
-/* eslint-disable no-multiple-empty-lines */
-/* eslint-disable semi */
-/* eslint-disable quotes */
-/* eslint-disable space-in-parens */
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 const { cloudinary } = require("../config/cloudPhoto");
-
-
 
 const createUrlUser = async (photoUrl) => {
   const folderName = 'User';
@@ -53,9 +39,7 @@ const createUrlProperty = async (photoUrl) => {
   return image;
 };
 
-
 const deleteUrlPhoto = async (photoUrl) => { await cloudinary.uploader.destroy( photoUrl, { resource_type: "image" } ) };
-
 
 const userStorage = multer.diskStorage({
   destination: "public/user-photos/",
@@ -73,7 +57,6 @@ const propertyStorage = multer.diskStorage({
   },
 });
 
-
 function fileFilter(req, file, cb){
   if (file.mimetype == 'image/png' || file.mimetype == 'image/jpg' || file.mimetype == 'image/jpeg') {
     return cb(null, true);
@@ -81,7 +64,6 @@ function fileFilter(req, file, cb){
     return cb({ status: 422, message: "file not supported"});
   }
 }
-
 
 // upload photo
 const userUpload = multer({ storage: userStorage, fileFilter, limits: { fileSize: 5000000 } }).single('image');
@@ -105,8 +87,6 @@ const propertyFileParser = (req, res, next) => {
     next();
   });
 };
-
-
 
 module.exports = {
   userFileParser,

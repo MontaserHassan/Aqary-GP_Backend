@@ -1,8 +1,8 @@
 const defaultRoles = [
   {
     role_name: 'Admin',
+    rank: 1,
     actions: {
-      roleRank: 1,
       canBlockUser: false,
       canDeletePropertyAds: false,
       canDeleteProperty: false,
@@ -11,8 +11,8 @@ const defaultRoles = [
   },
   {
     role_name: 'User',
+    rank: 3,
     actions: {
-      roleRank: 3,
       canBlockUser: false,
       canDeletePropertyAds: false,
       canDeleteProperty: false,
@@ -21,8 +21,8 @@ const defaultRoles = [
   },
   {
     role_name: 'Blocked User',
+    rank: 0,
     actions: {
-      roleRank: 0,
       canBlockUser: false,
       canDeletePropertyAds: false,
       canDeleteProperty: false,

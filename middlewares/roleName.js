@@ -1,21 +1,19 @@
 const RoleModel = require("../models/RoleModel");
+const User = require("../models/userModel");
 
 /* eslint-disable consistent-return */
-module.exports = (roleName) => (req, res, next) => {
+module.exports = (roleName) => async (req, res, next) => {
   try {
-    const role = RoleModel.findOne({name: roleName});
-    const userRole = RoleModel.findOneById(req.user.roleId);
-    if (userRole.rank > role.rank) {
+    const role = await RoleModel.findOne({role_name: roleName});
+    if (req.user.roleId.rank === 0 || req.user.roleId.rank > role.rank) {
       throw ({
         status: 401,
         message: 'You are not authorized to perform this action',
       });
     }
   } catch (err) {
-    throw ({
-      status: 401,
-      message: 'You are not authorized to perform this action',
-    });
+    console.log(err.message)
+    return res.status(err.status || 500).json({ message: err.message });
   }
   return next();
 };
