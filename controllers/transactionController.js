@@ -17,10 +17,11 @@ const subscribeService = async (userId, amount, payment, duration) => {
 }
 
 // Create a new transaction for property payment
-const payForPropertyPost = async (userId, propertyId, amount, payment, duration) => {
+const payForPropertyPost = async (userId, propertyId, paymentId, amount, payment, duration) => {
   const transaction = new Transaction({
     userId,
     propertyId,
+    paymentId,
     amount,
     payment,
     TransactionType: 'property',

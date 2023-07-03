@@ -151,11 +151,12 @@ const createProperty = asyncFunction(async (req, res) => {
     try {
       const userId = req?.user?._id || '649db4ae75fc1c6db6d97554';
       const propertyId = property._id;
+      const paymentId = pay?.id;
       const amount = req.body.amount;
       const payment = req.body.paymentOption;
       const duration = valueOfAdd[req.body.subscribe].time;
 
-      const transaction = await payForPropertyPost(userId, propertyId, amount, payment, duration);
+      const transaction = await payForPropertyPost(userId, propertyId, paymentId, amount, payment, duration);
     } catch (err) {
       console.log(err);
       throw { status: 500, message: 'Error processing transaction' };

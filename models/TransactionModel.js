@@ -4,7 +4,6 @@ const transactionSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    // required: true
   },
   propertyId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -24,7 +23,7 @@ const transactionSchema = new mongoose.Schema({
   },
   propertyDuration: {
     type: String,
-    enum: ['day', 'week', 'month'],
+    enum: ['hour', 'day', 'week', 'month'],
     required: function () { return this.TransactionType === 'property' },
   },
   subscriptionDuration: {
