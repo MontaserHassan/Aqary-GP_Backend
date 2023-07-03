@@ -54,7 +54,10 @@ exports.login = asyncFunction(async (req, res, next) => {
     const token = signToken( user._id );
     res.status(200).json({
         status: 'success',
-        token
+        token,
+        user: {
+            email: user.email
+        }
     })
 });
 
