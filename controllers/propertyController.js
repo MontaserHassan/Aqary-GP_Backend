@@ -203,7 +203,7 @@ const searchOnProperty = asyncFunction(async (req, res) => {
 
 const getPropertiesForUser = asyncFunction(async (req, res) => {
   if (!req.user) throw { status: 400, message: 'User not found' };
-  const properties = await Property.find(req.user._id);
+  const properties = await Property.find({ user: req.user._id });
   if (!properties || properties.length === 0) throw { status: 404, message: `No Properties for ${req.user.firstName} ${req.user.lastName}` };
   res.status(200).send(properties);
 });
