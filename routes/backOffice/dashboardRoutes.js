@@ -1,5 +1,5 @@
 const express = require("express");
-const {statistics, getCountPropertiesForEachCity, getPropertyTable} = require('../../controllers/Admin.js');
+const {statistics, getCountPropertiesForEachCity, getPropertyTable, getAmountForUserAndCount} = require('../../controllers/Admin.js');
 
 
 const router = express.Router();
@@ -34,6 +34,7 @@ const router = express.Router();
 
 router.get("/statistics", statistics);
 router.get("/properties", getPropertyTable);
+router.get("/subscriptions", getAmountForUserAndCount);
 router.get("/main-graph", getCountPropertiesForEachCity);
 
 

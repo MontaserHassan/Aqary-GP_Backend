@@ -40,6 +40,49 @@ const getProfitAndPercentageDifference = async () => {
   }
 }
 
+const getAmountForUserAndCount = async (req, res) => {
+  if(!cache.get('getAmountForUserAndCount')){
+    try {
+      const amountForUserAndCount = await TransactionModel.aggregate([
+        {
+          $group: {
+            _id: "$userId",
+            propertyCount: { $sum: 1 },
+            transactionAmount: { $sum: "$amount" }
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "_id",
+            foreignField: "_id",
+            as: "user"
+          }
+        },
+        {
+          $unwind: "$user"
+        },
+        {
+          $project: {
+            "user.firstName": 1,
+            "user.lastName": 1,
+            propertyCount: 1,
+            transactionAmount: 1
+          }
+        }
+      ]);
+      cache.set('getAmountForUserAndCount', amountForUserAndCount);
+      res.json(amountForUserAndCount);
+    } catch (err) {
+      logger.error(err.message);
+      throw new Error('Server error: ' + err.message);
+    };
+  }else{
+    res.json({countPropertiesForEachCity: cache.get('getCountPropertiesForEachCity')});
+  }
+
+};
+
 const getCountPropertiesForEachCity = async (req, res) => {
   if(!cache.get('getCountPropertiesForEachCity')){
     try {
@@ -165,4 +208,4 @@ const getPropertyTable = async (req, res) => {
   }
 };
 
-module.exports = {statistics, getCountPropertiesForEachCity, getPropertyTable};
+module.exports = {statistics, getCountPropertiesForEachCity, getPropertyTable, getAmountForUserAndCount};

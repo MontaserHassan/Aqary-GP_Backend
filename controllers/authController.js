@@ -125,7 +125,6 @@ exports.protect = asyncFunction(async (req, res, next) => {
 
     //Grant access to protected route
     req.user = currentUser;
-    console.log(req.user);
     next();
 });
 
