@@ -36,7 +36,7 @@ const getAllCategories = asyncFunction(async (req, res) => {
 
 
 const updateCategory = asyncFunction(async (req, res) => {
-    const checkBeforeUpdating = await Category.findById(req.params.id);
+    const checkBeforeUpdating = await Category.findById(req.params.categoryId);
     if (!checkBeforeUpdating) throw { status: 404, message: "Category can't update because NOT exists" };
     const updateCategory = await Category.findByIdAndUpdate({ _id: req.params.categoryId }, { name: req.body.name });
     if (!updateCategory) throw { status: 404, message: "Category can't update" };
