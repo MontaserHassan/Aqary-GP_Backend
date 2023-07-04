@@ -51,56 +51,37 @@ const addMoneyToWallet = async (userId, amount, payment) => {
 
 
 
-// const createTransaction = async (userId, propertyId, amount, payment, duration, TransactionType) => {
+const createTransaction = async (userId, propertyId, amount, payment, duration, TransactionType) => {
 
-//   try {
-//     // const { userId, propertyId, amount, payment, duration, TransactionType } = req.body;
-//     const { id } = req.body.transactionsData;
-//     const TransactionType = "asd";
-//     if (TransactionType == 'subscription') {
+  try {
+    // const { userId, propertyId, amount, payment, duration, TransactionType } = req.body;
+    const { id } = req.body.transactionsData;
+    const TransactionType = "asd";
+    if (TransactionType == 'subscription') {
 
-//       await subscribeService(userId, amount, payment, duration);
+      await subscribeService(userId, amount, payment, duration);
 
-//     }
-//     else if (TransactionType === 'property') {
+    }
+    else if (TransactionType === 'property') {
 
-//       await payForPropertyPost(userId, propertyId, amount, payment, duration);
+      await payForPropertyPost(userId, propertyId, amount, payment, duration);
 
-//     }
-//     else if (TransactionType === 'wallet') {
+    }
+    else if (TransactionType === 'wallet') {
 
-//       await addMoneyToWallet(userId, amount, payment)
-//     }
-//     else {
-//       return res.status(400).json({ error: 'Invalid transaction type' });
-//     }
-//     return res.status(200).json({ message: 'Transaction created successfully' });
-//   } catch (err) {
+      await addMoneyToWallet(userId, amount, payment)
+    }
+    else {
+      return res.status(400).json({ error: 'Invalid transaction type' });
+    }
+    return res.status(200).json({ message: 'Transaction created successfully' });
+  } catch (err) {
 
-//     res.status(500).json({ error: 'Invalid Server Error' });
-//     console.error('Error creating transaction:', err);
+    res.status(500).json({ error: 'Invalid Server Error' });
+    console.error('Error creating transaction:', err);
 
-//   }
-// }
-
-// const createTransaction = async (userId, propertyId, amount, payment, duration, transactionType) => {
-
-//   if (transactionType === 'subscription') {
-
-//     await subscribeService(userId, amount, payment, duration);
-
-//   } else if (transactionType === 'property') {
-
-//     await payForPropertyPost(userId, propertyId, amount, payment, duration);
-
-//   } else if (transactionType === 'wallet') {
-
-//     await addMoneyToWallet(userId, amount, payment);
-
-//   } else {
-//     throw new Error('Invalid transaction type');
-//   }
-// }
+  }
+}
 
 
 const getTransactionById = async (req, res) => {
