@@ -9,13 +9,6 @@ const cityRoutes = require('./cityRoute')
 const authController = require('./../../controllers/authController');
 const router = express.Router();
 
-// all customer routes
-// for everyone
-router.use('/api/v1/users', authRoutes); // ---> route to property
-router.use('/property', propertyRoutes); // ---> route to property
-router.use('/city', cityRoutes); // ---> route to property
-
-// middleware for check current user
 
 router.use('/auth', authRoutes);
 router.use('/city', cityRoutes);
