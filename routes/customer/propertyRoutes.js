@@ -82,6 +82,7 @@ const router = express.Router();
 
 router.get("/", propertyController.getAllProperties);
 router.get("/:id", validation(propertyValidator.idParams), propertyController.getProperty);
+router.get("/filter/:min/:max", propertyController.filterPropertiesByPrice);
 router.get("/search/:city", validation(propertyValidator.searching), propertyController.searchOnProperty);
 
 
