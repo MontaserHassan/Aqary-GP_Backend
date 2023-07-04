@@ -1,7 +1,6 @@
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
-const catchAsync = require('./../utils/catchAsync');
 const { asyncFunction } = require('./../middlewares/asyncHandler');
 
 const signToken = id => {
@@ -11,7 +10,7 @@ const signToken = id => {
 }
 
 exports.signup = asyncFunction(async (req, res, next) => {
-    try{
+    try {
 
         const newUser = await User.create({
             firstName: req.body.firstName,
@@ -22,12 +21,12 @@ exports.signup = asyncFunction(async (req, res, next) => {
             password: req.body.password,
             passwordConfirm: req.body.passwordConfirm
         });
-    
+
         newUser.password = undefined;
         newUser.__v = undefined;
-    
+
         const token = signToken(newUser._id);
-    
+
         res.status(201).json({
             status: 'success',
             token,
@@ -44,19 +43,19 @@ exports.signup = asyncFunction(async (req, res, next) => {
             // const message = `Phone number "${req.body.phoneNumber}" is already in use. Please use another phone number.`;
             throw { status: 400, message: message};
         }
-        
-        if (err.name === 'ValidationError'){
+
+        if (err.name === 'ValidationError') {
             const errors = Object.values(err.errors).map(el => el.message);
             console.log(errors);
             const message = `${errors.join('. ')}`;
-            throw { status: 400, message: message};
+            throw { status: 400, message: message };
         }
-        
+
         res.status(500).json({
-        status: 'error',
-        message: 'Something went wrong'
+            status: 'error',
+            message: 'Something went wrong'
         });
-            
+
     }
 
 });
@@ -118,7 +117,7 @@ exports.protect = asyncFunction(async (req, res, next) => {
     }
     //3) Check if user still exists
     const currentUser = await User.findById(decoded.id).populate('roleId');
-    
+
     if (!currentUser) throw { status: 401, message: 'The user belonging to this token does not longer exist!' };
 
     //4) Check if user changed password after the token was issued
@@ -126,27 +125,28 @@ exports.protect = asyncFunction(async (req, res, next) => {
 
     //Grant access to protected route
     req.user = currentUser;
+    console.log(req.user);
     next();
-}); 
+});
 
 exports.userInfo = asyncFunction(async (req, res, next) => {
     const userId = req.user._id;
 
-     // Find the user data associated with the provided token
-     const user = await User.findById(userId);
+    // Find the user data associated with the provided token
+    const user = await User.findById(userId);
 
-     // If user data is not found, send an error response
-     if (!user) {
-         throw { status: 404, message: 'User not found' };
-     }
- 
-     // If user data is found, respond with it
-     res.json({
-         status: 'success',
-         data: {
-             user
-         }
-     });
+    // If user data is not found, send an error response
+    if (!user) {
+        throw { status: 404, message: 'User not found' };
+    }
+
+    // If user data is found, respond with it
+    res.json({
+        status: 'success',
+        data: {
+            user
+        }
+    });
 
 
 }); 
