@@ -79,7 +79,7 @@ const getAmountForUserAndCount = async (req, res) => {
 };
 
 const getCountPropertiesForEachCity = async (req, res) => {
-  // if(!cache.get('getCountPropertiesForEachCity')){
+  if(!cache.get('getCountPropertiesForEachCity')){
     try {
       const countPropertiesForEachCity = await Property.aggregate([
         {
@@ -108,9 +108,9 @@ const getCountPropertiesForEachCity = async (req, res) => {
       logger.error(err.message);
       throw new Error('Server error: ' + err.message);
     };
-  // }else{
-  //   res.json({countPropertiesForEachCity: cache.get('getCountPropertiesForEachCity')});
-  // }
+  }else{
+    res.json({countPropertiesForEachCity: cache.get('getCountPropertiesForEachCity')});
+  }
 
 };
 
