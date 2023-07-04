@@ -4,6 +4,12 @@ const Property = require('../models/propertyModel');
 const cache = require('../config/cache');
 const { default: mongoose } = require('mongoose');
 
+const isAdmin = (req, res) => {
+    return res.status(200).json({
+      message: 'yes' 
+    });
+}
+
 const getProfitAndPercentageDifference = async () => {
   if(!cache.get('thisMonthTotal')){
     const today = new Date();
@@ -40,6 +46,44 @@ const getProfitAndPercentageDifference = async () => {
   }
 }
 
+const getAmountForUserAndCount = async (req, res) => {
+    try {
+      const amountForUserAndCount = await TransactionModel.aggregate([
+        {
+          $group: {
+            _id: "$userId",
+            propertyCount: { $sum: 1 },
+            transactionAmount: { $sum: "$amount" }
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "_id",
+            foreignField: "_id",
+            as: "user"
+          }
+        },
+        {
+          $unwind: "$user"
+        },
+        {
+          $project: {
+            "user.firstName": 1,
+            "user.lastName": 1,
+            propertyCount: 1,
+            transactionAmount: 1
+          }
+        }
+      ]);
+      res.json(amountForUserAndCount);
+    } catch (err) {
+      logger.error(err.message);
+      throw new Error('Server error: ' + err.message);
+    };
+
+};
+
 const getCountPropertiesForEachCity = async (req, res) => {
   if(!cache.get('getCountPropertiesForEachCity')){
     try {
@@ -57,7 +101,12 @@ const getCountPropertiesForEachCity = async (req, res) => {
             count: 1
           }
         },
-        { $limit: 5 }
+        {
+          $sort: {
+            count: -1
+          }
+        },
+        { $limit: 5 },
       ]);
       cache.set('countPropertiesForEachCity', countPropertiesForEachCity);
       res.json({countPropertiesForEachCity});
@@ -165,4 +214,4 @@ const getPropertyTable = async (req, res) => {
   }
 };
 
-module.exports = {statistics, getCountPropertiesForEachCity, getPropertyTable};
+module.exports = {statistics, getCountPropertiesForEachCity, getPropertyTable, getAmountForUserAndCount, isAdmin};

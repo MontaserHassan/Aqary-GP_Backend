@@ -27,9 +27,9 @@ const propertySchema = new Schema(
       type: String,
       required: true,
     },
-    title: {
-      type: String,
-      enum: ['villa', 'shale', 'apartment'],
+    categoryId: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Category',
       required: true,
     },
     level: {

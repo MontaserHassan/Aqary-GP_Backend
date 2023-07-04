@@ -1,6 +1,7 @@
 /* eslint-disable no-multiple-empty-lines */
 const express = require('express');
 const authRoutes = require('./authRoute');
+const categoryRoutes = require('./categoryRoutes');
 const propertyRoutes = require('./propertyRoutes');
 const userRoutes = require("./userPropertyRoutes");
 const checkoutRoutes = require('./checkout');
@@ -12,6 +13,7 @@ const router = express.Router();
 
 router.use('/auth', authRoutes);
 router.use('/city', cityRoutes);
+router.use('/categories', categoryRoutes);
 router.use('/property', propertyRoutes);
 
 router.use(authController.protect);

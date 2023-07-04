@@ -27,7 +27,6 @@ router.post("/capture-paypal-order", async (req, res) => {
     const captureData = await paypalApi.capturePayment(orderID);
     return res.json(captureData);
   } catch (err) {
-    console.log(err.message);
     res.status(500).json(err);
   }
 });

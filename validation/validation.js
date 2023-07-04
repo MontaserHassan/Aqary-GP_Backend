@@ -9,31 +9,62 @@ const Joi = require("joi");
 const { asyncFunction } = require("../middlewares/asyncHandler");
 
 
-const validation = (schema) =>
-  asyncFunction(async (req, res, next) => {
-    const errorValidation = [];
-    ["params", "query", "body"].forEach((key) => {
-      if (schema[key]) {
-        const validation = schema[key].validate(req[key]);
-        if (validation.error) {
-          errorValidation.push(validation.error);
-        }
+const validation = (schema) => asyncFunction(async (req, res, next) => {
+  const errorValidation = [];
+  ["params", "query", "body"].forEach((key) => {
+    if (schema[key]) {
+      const validation = schema[key].validate(req[key]);
+      if (validation.error) {
+        errorValidation.push(validation.error);
       }
-    });
-    if (errorValidation.length > 0) {
-      throw { status: 422, message: errorValidation[0].details[0].message };
-    } else {
-      next();
     }
+  });
+  if (errorValidation.length > 0) {
+    throw { status: 422, message: errorValidation[0].details[0].message };
+  } else {
+    next();
+  }
+});
+
+
+const categoryValidation = {
+  createCategory: {
+    body: Joi.object().keys({
+      name: Joi.string().required(),
+    }),
   },
-);
+  updateCategory: {
+    body: Joi.object().keys({
+      name: Joi.string(),
+    }),
+    params: Joi.object().keys({
+      categoryId: Joi.string().required().length(24),
+    })
+  },
+  deleteCategory: {
+    params: Joi.object().keys({
+      categoryId: Joi.string().required().length(24),
+    }),
+  },
+  getCategoryById: {
+    params: Joi.object().keys({
+      categoryId: Joi.string().required().length(24),
+    }),
+  },
+  getPropertiesByCategoryId: {
+    params: Joi.object().keys({
+      categoryId: Joi.string().required().length(24),
+    }),
+  },
+};
+
 
 const propertyValidator = {
   createProperty: {
     body: Joi.object().keys({
       address: Joi.string().required(),
       city: Joi.string().required(),
-      title: Joi.string().required().valid("villa", "shale", "apartment"),
+      categoryId: Joi.string().required().length(24),
       level: Joi.number().integer().required(),
       rooms: Joi.number().integer().required(),
       baths: Joi.number().integer().required(),
@@ -49,7 +80,7 @@ const propertyValidator = {
     body: Joi.object().keys({
       address: Joi.string(),
       city: Joi.string(),
-      title: Joi.string().valid("villa", "shale", "apartment"),
+      categoryId: Joi.string().length(24),
       level: Joi.number().integer(),
       rooms: Joi.number().integer(),
       baths: Joi.number().integer(),
@@ -77,7 +108,10 @@ const propertyValidator = {
   },
 };
 
+
+
 module.exports = {
   validation,
   propertyValidator,
+  categoryValidation,
 };
