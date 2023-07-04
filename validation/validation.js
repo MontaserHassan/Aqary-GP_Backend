@@ -107,6 +107,11 @@ const propertyValidator = {
       id: Joi.string().length(24).required(),
     }),
   },
+  filterPropertiesByPrice: {
+    params: Joi.object().required().keys({
+      min: Joi.number().integer().required(),
+    }),
+  }
 };
 
 

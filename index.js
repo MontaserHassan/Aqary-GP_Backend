@@ -15,14 +15,13 @@ const app = express();
 // initializeCache
 initializeCache();
 
-// configuration
 app.use(express.static('public'));
 app.use(cors());
 
 // Apply the rate limiting middleware to all requests
 app.use(limiter);
 
-// previent extended fields and set limit
+// prevent extended fields and set limit
 app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 app.use(express.json({ extended: false, limit: '1mb' }));
 app.use(bodyParser.json());
@@ -31,10 +30,6 @@ app.use(helmet());
 app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy('aqary tech.'));
 
-// // midldlewares
-// app.use(authController.protect);
-
-// routes
 app.use(require('./routes'));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
