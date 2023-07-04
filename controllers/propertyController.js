@@ -124,7 +124,7 @@ const getAllProperties = asyncFunction(async (req, res) => {
   if (page > totalPages) {
     throw { status: 404, message: 'There are no properties in this page' };
   };
-  const properties = await Property.find().skip(skip).sort({ createdAt: -1 }).limit(pageSize);
+  const properties = await Property.find().sort({ createdAt: -1 }).skip(skip).limit(pageSize).populate({ path: 'categoryId' });
   res.status(200).send({ page: page, pageSize: pageSize, properties: properties, totalPages: totalPages, totalProperties: totalProperties });
 });
 
@@ -149,6 +149,7 @@ const editProperty = asyncFunction(async (req, res) => {
       return photo;
     })
   );
+
   const updatedProperty = await Property.findByIdAndUpdate(
     { _id: req.params.id },
     {
@@ -167,7 +168,7 @@ const editProperty = asyncFunction(async (req, res) => {
     { new: true },
   );
   // eslint-disable-next-line no-throw-literal
-  if (!updatedProperty) throw { status: 404, message: 'property cant update' };
+  if (!updatedProperty) throw { status: 404, message: "property can't update" };
   res.status(200).send(updatedProperty);
 });
 
@@ -193,9 +194,7 @@ const deleteProperty = asyncFunction(async (req, res) => {
 
 const searchOnProperty = asyncFunction(async (req, res) => {
   const property = await Property.find({ city: { $regex: new RegExp(req.params.city, 'i') } });
-  if (!property) {
-    throw { status: 404, message: 'Property not found' };
-  }
+  if (!property) throw { status: 404, message: 'Property not found' };
   res.status(200).send(property);
 });
 
@@ -205,10 +204,22 @@ const searchOnProperty = asyncFunction(async (req, res) => {
 
 const getPropertiesForUser = asyncFunction(async (req, res) => {
   if (!req.user) throw { status: 400, message: 'User not found' };
-  const properties = await Property.find(req.user._id);
+  const properties = await Property.find({ user: req.user._id });
   if (!properties || properties.length === 0) throw { status: 404, message: `No Properties for ${req.user.firstName} ${req.user.lastName}` };
   res.status(200).send(properties);
 });
+
+
+//////////////////////////////////// get Properties by price ///////////////////////////////////////
+
+
+const filterPropertiesByPrice = async (req, res) => {
+  const properties = await Property.find({ price: { $gte: req.params.min } });
+  if (!properties || properties.length === 0) throw { status: 404, message: 'No properties for this range' };
+  res.status(200).send(properties);
+};
+
+
 
 
 module.exports = {
@@ -218,5 +229,6 @@ module.exports = {
   editProperty,
   deleteProperty,
   searchOnProperty,
-  getPropertiesForUser
+  getPropertiesForUser,
+  filterPropertiesByPrice
 };

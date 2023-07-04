@@ -4,16 +4,21 @@ const Property = require('../models/propertyModel');
 const cache = require('../config/cache');
 const { default: mongoose } = require('mongoose');
 
+const isAdmin = (req, res) => {
+    return res.status(200).json({
+      message: 'yes' 
+    });
+}
+
 const getProfitAndPercentageDifference = async () => {
   if(!cache.get('thisMonthTotal')){
     const today = new Date();
-    const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0); // start of this month
-    const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1, 0, 0, 0, 0); // start of last month
-    const thisMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999); // end of this month
+    const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0);
+    const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1, 0, 0, 0, 0);
     
     const [thisMonth, lastMonth] = await Promise.all([
       TransactionModel.aggregate([
-        { $match: { createdAt: { $gte: thisMonthStart, $lte: thisMonthEnd } } },
+        { $match: { createdAt: { $gte: thisMonthStart, $lte: new Date() } } },
         { $group: { _id: null, total: { $sum: '$amount' } } }
       ]),
       TransactionModel.aggregate([
@@ -22,17 +27,16 @@ const getProfitAndPercentageDifference = async () => {
       ])
     ]);
 
-
-
-    const thisMonthTotal = thisMonth.length ? thisMonth[0].total : 0;
-    const lastMonthTotal = lastMonth.length ? lastMonth[0].total : 0;
+    const thisMonthTotal = thisMonth.length > 0 ? thisMonth[0].total : 0;
+    const lastMonthTotal = lastMonth.length > 0 ? lastMonth[0].total : 0;
     const percentageDifference = ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
 
     cache.set('thisMonthTotal', thisMonthTotal);
     cache.set('percentageDifference', percentageDifference);
 
+    console.log(lastMonthTotal)
     return { thisMonthTotal, percentageDifference };
-  }else{
+  } else {
     return {
       thisMonthTotal: cache.get('thisMonthTotal'),
       percentageDifference: cache.get('percentageDifference'),
@@ -41,7 +45,6 @@ const getProfitAndPercentageDifference = async () => {
 }
 
 const getAmountForUserAndCount = async (req, res) => {
-  if(!cache.get('getAmountForUserAndCount')){
     try {
       const amountForUserAndCount = await TransactionModel.aggregate([
         {
@@ -71,15 +74,11 @@ const getAmountForUserAndCount = async (req, res) => {
           }
         }
       ]);
-      cache.set('getAmountForUserAndCount', amountForUserAndCount);
       res.json(amountForUserAndCount);
     } catch (err) {
       logger.error(err.message);
       throw new Error('Server error: ' + err.message);
     };
-  }else{
-    res.json({countPropertiesForEachCity: cache.get('getCountPropertiesForEachCity')});
-  }
 
 };
 
@@ -100,7 +99,12 @@ const getCountPropertiesForEachCity = async (req, res) => {
             count: 1
           }
         },
-        { $limit: 5 }
+        {
+          $sort: {
+            count: -1
+          }
+        },
+        { $limit: 5 },
       ]);
       cache.set('countPropertiesForEachCity', countPropertiesForEachCity);
       res.json({countPropertiesForEachCity});
@@ -208,4 +212,4 @@ const getPropertyTable = async (req, res) => {
   }
 };
 
-module.exports = {statistics, getCountPropertiesForEachCity, getPropertyTable, getAmountForUserAndCount};
+module.exports = {statistics, getCountPropertiesForEachCity, getPropertyTable, getAmountForUserAndCount, isAdmin};
