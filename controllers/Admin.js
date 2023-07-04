@@ -5,22 +5,9 @@ const cache = require('../config/cache');
 const { default: mongoose } = require('mongoose');
 
 const isAdmin = (req, res) => {
-  async (req, res, next) => {
-    try {
-      const role = await RoleModel.findOne({role_name: 'Admin'});
-      if (req.user.roleId.rank === 0 || req.user.roleId.rank > role.rank) {
-        throw ({
-          status: 401,
-          message: 'You are not authorized to perform this action',
-        });
-      }
-    } catch (err) {
-      return res.status(err.status || 500).json({ message: err.message });
-    }
     return res.status(200).json({
       message: 'yes' 
     });
-  }
 }
 
 const getProfitAndPercentageDifference = async () => {
