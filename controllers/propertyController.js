@@ -78,7 +78,7 @@ const createProperty = asyncFunction(async (req, res) => {
       user: req?.user?._id || '649db4ae75fc1c6db6d97554',
       address: req.body.address,
       city: req.body.city,
-      title: req.body.title,
+      categoryId: req.body.categoryId,
       level: req.body.level,
       rooms: req.body.rooms,
       baths: req.body.baths,
