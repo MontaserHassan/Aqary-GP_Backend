@@ -214,9 +214,14 @@ const getPropertiesForUser = asyncFunction(async (req, res) => {
 
 
 const filterPropertiesByPrice = async (req, res) => {
-  const properties = await Property.find({ price: { $gte: req.params.min } });
+  const pageSize = 9;
+  let page = req.query.page || 1;
+  let skip = (page - 1) * pageSize;
+  const properties = await Property.find({ price: { $gte: req.params.min } }).sort({ createdAt: -1 }).skip(skip).limit(pageSize);
+  const totalProperties = await Property.countDocuments({ price: { $gte: req.params.min } });
+  const totalPages = Math.ceil(totalProperties / pageSize);
   if (!properties || properties.length === 0) throw { status: 404, message: 'No properties for this range' };
-  res.status(200).send(properties);
+  res.status(200).send({ page: page, pageSize: pageSize, properties: properties, totalPages: totalPages, totalProperties: totalProperties });
 };
 
 
