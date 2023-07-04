@@ -11,6 +11,18 @@ const signToken = id => {
     });
 }
 
+const createSendToken = (user, statusCode, res) => {
+    const token = signToken(user._id);
+
+    res.status(statusCode).json({
+        status: 'success',
+        token,
+        data: {
+            user
+        }
+    })
+};
+
 exports.signup = asyncFunction(async (req, res, next) => {
     try {
 
@@ -27,15 +39,7 @@ exports.signup = asyncFunction(async (req, res, next) => {
         newUser.password = undefined;
         newUser.__v = undefined;
 
-        const token = signToken(newUser._id);
-
-        res.status(201).json({
-            status: 'success',
-            token,
-            data: {
-                user: newUser
-            }
-        });
+    createSendToken(newUser, 201, res);
 
     }catch (err) {
         if (err.code === 11000){
@@ -213,6 +217,7 @@ exports.resetPassword = asyncFunction(async (req, res, next) => {
   
     // 3) Update changedPasswordAt property for the user
     // 4) Log the user in, send JWT
+    
     const token = signToken(user._id);
     res.status(200).json({
         status: 'success',
@@ -220,3 +225,21 @@ exports.resetPassword = asyncFunction(async (req, res, next) => {
     });
     
   });
+
+exports.updatePassword = asyncFunction( async (req, res, next) => {
+    //1) Get user from collection
+    const user = await User.findById(req.user.id).select('+password');
+
+    //2) Check if posted current password is correct
+    if(!(await user.correctPassword(req.body.passwordCurrent), user.password)) {
+        throw {status: 401 , message:'Your current password is wrong' }
+    }
+
+    //3) If so, update password
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    await user.save();
+
+    //4) Log user in , send JWT
+    createSendToken(newUser, 200, res);
+});
