@@ -209,15 +209,12 @@ const getPropertiesForUser = asyncFunction(async (req, res) => {
 });
 
 
-//////////////////////////////////// get Properties for user ///////////////////////////////////////
+//////////////////////////////////// get Properties by price ///////////////////////////////////////
 
 
 const filterPropertiesByPrice = async (req, res) => {
-  const { min, max } = req.params;
-  let filter = { price: { $gte: min } };
-  if (max) filter.price.$lte = max;
-  const properties = await Property.find(filter);
-  if (!properties || properties.length === 0) throw { status: 404, message: `No Properties for this range` };
+  const properties = await Property.find({ price: { $gte: req.params.min } });
+  if (!properties || properties.length === 0) throw { status: 404, message: 'No properties for this range' };
   res.status(200).send(properties);
 };
 
