@@ -27,7 +27,7 @@ const propertySchema = new Schema(
       type: String,
       required: true,
     },
-    type: {
+    categoryId: {
       type: mongoose.Types.ObjectId,
       ref: 'Category',
       required: true,
