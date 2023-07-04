@@ -12,6 +12,7 @@ const router = express.Router();
 
 
 router.use(propertyFileParser);
+router.get("/", propertyController.getPropertiesForUser);
 router.post("/", propertyController.createProperty);
 router.patch("/:id", validation(propertyValidator.updateProperty), propertyController.editProperty);
 router.delete("/:id", propertyController.deleteProperty);
