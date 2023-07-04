@@ -149,6 +149,7 @@ const editProperty = asyncFunction(async (req, res) => {
       return photo;
     })
   );
+
   const updatedProperty = await Property.findByIdAndUpdate(
     { _id: req.params.id },
     {
