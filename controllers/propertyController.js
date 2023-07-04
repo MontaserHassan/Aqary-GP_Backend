@@ -209,6 +209,17 @@ const getPropertiesForUser = asyncFunction(async (req, res) => {
 });
 
 
+//////////////////////////////////// get Properties by price ///////////////////////////////////////
+
+
+const filterPropertiesByPrice = async (req, res) => {
+  const properties = await Property.find({ price: { $gte: req.params.min } });
+  if (!properties || properties.length === 0) throw { status: 404, message: 'No properties for this range' };
+  res.status(200).send(properties);
+};
+
+
+
 
 module.exports = {
   createProperty,
@@ -217,5 +228,6 @@ module.exports = {
   editProperty,
   deleteProperty,
   searchOnProperty,
-  getPropertiesForUser
+  getPropertiesForUser,
+  filterPropertiesByPrice
 };
