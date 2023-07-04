@@ -41,7 +41,6 @@ const getProfitAndPercentageDifference = async () => {
 }
 
 const getAmountForUserAndCount = async (req, res) => {
-  if(!cache.get('getAmountForUserAndCount')){
     try {
       const amountForUserAndCount = await TransactionModel.aggregate([
         {
@@ -71,15 +70,11 @@ const getAmountForUserAndCount = async (req, res) => {
           }
         }
       ]);
-      cache.set('getAmountForUserAndCount', amountForUserAndCount);
       res.json(amountForUserAndCount);
     } catch (err) {
       logger.error(err.message);
       throw new Error('Server error: ' + err.message);
     };
-  }else{
-    res.json({countPropertiesForEachCity: cache.get('getCountPropertiesForEachCity')});
-  }
 
 };
 
