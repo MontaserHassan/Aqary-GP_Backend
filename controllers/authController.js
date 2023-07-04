@@ -149,4 +149,20 @@ exports.userInfo = asyncFunction(async (req, res, next) => {
     });
 
 
-}); 
+});
+
+exports.forgotPassword = asyncFunction(async (req, res, next) => {
+    //1)Get user based on posted email
+    const user = await User.findOne({email: req.body.email});
+    if(!user) throw { status: 404, message: 'There is no user with that email address.' };
+
+    //2)Generate the random token
+    const resetToken = user.createPasswordResetToken();
+    await user.save({ validateBeforeSave: false });
+
+    //3) send it to user's email
+});
+
+exports.resetPassword = asyncFunction( async (req, res, next) => {
+    
+})
