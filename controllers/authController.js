@@ -38,10 +38,10 @@ exports.signup = asyncFunction(async (req, res, next) => {
 
     }catch (err) {
         if (err.code === 11000){
-            // const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
-            // console.log("ana value", value);
-            // const message = `Duplicate field value: ${value}. Please use another value!`;
-            const message = `Phone number "${req.body.phoneNumber}" is already in use. Please use another phone number.`;
+            const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+            console.log("ana value", value);
+            const message = `Duplicate field value: ${value}. Please use another value!`;
+            // const message = `Phone number "${req.body.phoneNumber}" is already in use. Please use another phone number.`;
             throw { status: 400, message: message};
         }
         
@@ -77,7 +77,6 @@ exports.login = asyncFunction(async (req, res, next) => {
         // return next(new AppError('Incorrect email or password', 401));
         throw { status: 401, message: 'Incorrect email or password' };
     }
-    // console.log(user);
 
     //3) If everthing ok, send token to client
     const token = signToken(user._id);
@@ -88,8 +87,10 @@ exports.login = asyncFunction(async (req, res, next) => {
             id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
-            roleId: user.roleId || null,
-            email: user.email
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            birthdate: user.birthdate,
+            roleId: user.roleId || null
         }
     })
 });
