@@ -12,5 +12,5 @@ cloudinary.config({
 
 
 module.exports = {
-    cloudinary
+  cloudinary
 }

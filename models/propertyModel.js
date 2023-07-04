@@ -27,9 +27,8 @@ const propertySchema = new Schema(
       type: String,
       required: true,
     },
-    categoryId: {
-      type: mongoose.Types.ObjectId,
-      ref: 'Category',
+    title: {
+      type: String,
       required: true,
     },
     level: {
