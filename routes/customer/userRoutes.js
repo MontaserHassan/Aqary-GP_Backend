@@ -8,7 +8,6 @@ const userController = require('./../../controllers/userController');
 const router = express.Router();
 
 
-router.patch('/resetPassword/:token', authController.resetPassword);
 router.post('/userInfo', authController.protect, authController.userInfo);
 router.patch('/updateUserInfo', authController.protect, userController.updateUserInfo);
 
