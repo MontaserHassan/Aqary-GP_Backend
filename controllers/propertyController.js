@@ -144,12 +144,12 @@ const getProperty = asyncFunction(async (req, res) => {
 
 
 const editProperty = asyncFunction(async (req, res) => {
-  const photos = await Promise.all(
-    req.files.map(async (file) => {
-      const photo = await createUrlProperty(`${file.destination}/${file.filename}`);
-      return photo;
-    })
-  );
+  // const photos = await Promise.all(
+  //   req.files.map(async (file) => {
+  //     const photo = await createUrlProperty(`${file.destination}/${file.filename}`);
+  //     return photo;
+  //   })
+  // );
 
   const updatedProperty = await Property.findByIdAndUpdate(
     { _id: req.params.id },
@@ -164,7 +164,7 @@ const editProperty = asyncFunction(async (req, res) => {
       description: req.body.description,
       price: req.body.price,
       contractPhone: req.body.contractPhone,
-      photo: photos,
+      // photo: photos,
       paymentOption: req.body.paymentOption,
     },
     { new: true },
