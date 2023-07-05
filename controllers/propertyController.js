@@ -91,6 +91,7 @@ const createProperty = asyncFunction(async (req, res) => {
       subscribe: valueOfAdd[req.body.subscribe].time,
       endTime: calculateEndTime(valueOfAdd[req.body.subscribe].time),
     });
+    console.log(req?.user?._id);
     if (!property) throw { status: 400, message: 'Bad Request' };
     try {
       const userId = req?.user?._id || '649db4ae75fc1c6db6d97554';
@@ -153,6 +154,7 @@ const editProperty = asyncFunction(async (req, res) => {
   const updatedProperty = await Property.findByIdAndUpdate(
     { _id: req.params.id },
     {
+      categoryId: req.body.categoryId,
       address: req.body.address,
       city: req.body.city,
       level: req.body.level,
