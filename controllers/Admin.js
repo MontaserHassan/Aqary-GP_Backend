@@ -193,10 +193,10 @@ const getPropertyTable = async (req, res) => {
     const query = Property.find(filter)
       .skip(skip)
       .limit(parseInt(pgSize))
-      .populate('user');
+      .populate('user')
+      .populate('categoryId');
     const countQuery = Property.countDocuments(filter);
     const [properties, count] = await Promise.all([query, countQuery]);
-
     res.json({
       data: properties,
       pagination: {

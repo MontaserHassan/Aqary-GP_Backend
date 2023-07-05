@@ -134,7 +134,7 @@ const getAllProperties = asyncFunction(async (req, res) => {
 
 
 const getProperty = asyncFunction(async (req, res) => {
-  const property = await Property.findById(req.params.id).populate({ path: 'user', path: 'categoryId' }).exec();
+  const property = await Property.findById(req.params.id).populate('user').populate('categoryId').exec();
   if (!property) throw { status: 404, message: 'No Properties Found' };
   res.status(200).send(property);
 });
