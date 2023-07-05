@@ -154,7 +154,7 @@ const editProperty = asyncFunction(async (req, res) => {
   const updatedProperty = await Property.findByIdAndUpdate(
     { _id: req.params.id },
     {
-      categoryId: req.body.categoryId,
+      // categoryId: req.body.categoryId,
       address: req.body.address,
       city: req.body.city,
       level: req.body.level,
