@@ -91,6 +91,7 @@ const createProperty = asyncFunction(async (req, res) => {
       subscribe: valueOfAdd[req.body.subscribe].time,
       endTime: calculateEndTime(valueOfAdd[req.body.subscribe].time),
     });
+    console.log(req?.user?._id);
     if (!property) throw { status: 400, message: 'Bad Request' };
     try {
       const userId = req?.user?._id || '649db4ae75fc1c6db6d97554';
