@@ -79,9 +79,7 @@ const propertyValidator = {
   updateProperty: {
     body: Joi.object().keys({
       address: Joi.string(),
-      title: Joi.string(),
       city: Joi.string(),
-      categoryId: Joi.string().length(24),
       level: Joi.number().integer(),
       rooms: Joi.number().integer(),
       baths: Joi.number().integer(),
